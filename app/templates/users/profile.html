@@ -1,6 +1,6 @@
 {% extends "layout/layout.html" %}
 {% block body %}
-{% if session.get('userid') %}
+{% if session.get('userid') == user.userid or (session.get('userroles') and "ADMIN" in session.get('userroles')) %}
     <a href="{{ url_for('userUpdate', userid = user.userid) }}">edit</a>
 {% endif %}
 <h1>

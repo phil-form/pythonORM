@@ -2,15 +2,19 @@ from app import db
 from app.models.role import Role
 from app.models.user import User
 from app.services.base_service import BaseService
+from app.mappers.user_mapper import UserMapper
 import bcrypt
 
 
 class UserService(BaseService):
     def find_all(self):
-        return User.query.filter_by(active=True).all()
+        return [UserMapper.entity_to_dto(user) for user in User.query.filter_by(active=True).all()]
+
+    def find_all_no_dto(self):
+        return User.query.all()
 
     def find_one(self, entity_id: int):
-        return User.query.filter_by(userid=entity_id).first()
+        return UserMapper.entity_to_dto(User.query.filter_by(userid=entity_id).first())
 
     def find_one_by(self, **kwargs) -> User:
         return User.query.filter_by(**kwargs).first()
@@ -29,8 +33,7 @@ class UserService(BaseService):
         return self.find_one(data.userid)
 
     def update(self, entity_id: int, data: User):
-        user = self.find_one(entity_id)
-        user.username = data.username
+        user = User.query.filter_by(userid=entity_id).first()
         user.useremail = data.useremail
         user.userdescription = data.userdescription
 
@@ -43,10 +46,10 @@ class UserService(BaseService):
             db.session.rollback()
             return None
 
-        return user
+        return UserMapper.entity_to_dto(user)
 
     def delete(self, entity_id: int):
-        user = self.find_one(entity_id)
+        user = User.query.filter_by(userid=entity_id).first()
 
         if user is not None:
             db.session.delete(user)

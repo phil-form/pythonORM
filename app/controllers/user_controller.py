@@ -1,3 +1,4 @@
+from app.decorators.auth_required import auth_required
 from app.services.user_service import UserService
 from app import app
 from flask import redirect, render_template, request, session, url_for, jsonify
@@ -10,7 +11,6 @@ userService = UserService()
 @app.route('/users')
 def getUserList():
     return render_template('users/list.html', users=userService.find_all())
-
 
 @app.route('/users/<int:userid>', methods=["GET"])
 def getOneUser(userid: int):
@@ -33,6 +33,7 @@ def register():
 
 
 @app.route('/users/update/<int:userid>', methods=["GET", "POST"])
+@auth_required(level="ADMIN", or_is_current_user=True)
 def userUpdate(userid: int):
     form = UserUpdateForm(request.form)
 
@@ -57,6 +58,7 @@ def login():
             if user != None:
                 session['username'] = user.username
                 session['userid'] = user.userid
+                session['userroles'] = user.get_roles()
                 return redirect(url_for('getOneUser', userid=user.userid))
 
             errors = {}
@@ -71,13 +73,14 @@ def login():
 def logout():
     session.pop('userid', None)
     session.pop('username', None)
+    session.pop('userroles', None)
     return redirect(url_for('index'))
 
 
 @app.route('/profile', methods=["GET"])
+@auth_required()
 def profile():
     userid = session.get('userid')
-    if userid != None:
-        return redirect(url_for('getOneUser', userid=userid))
-    else:
-        return redirect(url_for('index'))
+
+    return redirect(url_for('getOneUser', userid=userid))
+
