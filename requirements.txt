@@ -1,0 +1,10 @@
+Flask
+Flask-WTF
+Jinja2
+Flask-DebugToolbar
+psycopg2
+bcrypt
+Flask-SQLAlchemy
+Flask-Migrate
+dependency-injector
+pyyaml

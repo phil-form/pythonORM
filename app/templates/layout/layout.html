@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My magnificent MVC!</title>
+    </head>
+
+    <body>
+        <div>
+                <a href="{{ url_for('index') }}">Home</a>
+                {% if session.get('userid') %}
+                    <a href="{{ url_for('profile') }}">Profile</a>
+                    <a href="{{ url_for('logout') }}">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}">Login</a>
+                    <a href="{{ url_for('register') }}">Register</a>
+                {% endif %}
+        </div>
+
+        <div class="root">
+            {% block body %}{% endblock %}
+        </div>
+    </body>
+</html>

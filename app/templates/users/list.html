@@ -1,0 +1,8 @@
+{% extends "layout/layout.html" %}
+{% block body %}
+{% for user in users %}
+    <div>
+        {{ user.username }}
+    </div>
+{% endfor %}
+{% endblock %}

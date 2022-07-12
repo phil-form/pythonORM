@@ -1,0 +1,12 @@
+{% extends "layout/layout.html" %}
+{% block body %}
+<h1>
+    Regsiter
+</h1>
+<form id="register" method="post">
+    {{ form.csrf_token }}
+    <input type="text" name="useremail" placeholder="email" value="{{ '' if user == None else user.useremail }}" required>
+    <input type="text" name="userdescription" placeholder="description" value="{{ '' if user == None else user.userdescription }}" required>
+    <input type="submit" value="Send">
+</form>
+{% endblock %}
