@@ -1,4 +1,5 @@
 from app import db
+from app.models.role import Role
 from app.models.user import User
 from app.services.base_service import BaseService
 import bcrypt
@@ -32,6 +33,9 @@ class UserService(BaseService):
         user.username = data.username
         user.useremail = data.useremail
         user.userdescription = data.userdescription
+
+        role_user = Role.query.filter_by(rolename="USER").one()
+        user.add_role(role_user)
 
         try:
             db.session.commit()
