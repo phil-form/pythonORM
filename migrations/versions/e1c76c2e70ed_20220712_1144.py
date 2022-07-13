@@ -54,9 +54,9 @@ def upgrade():
     op.bulk_insert(
         roles_table,
         [
-            { "rolename": "USER" },
-            { "rolename": "MODERATOR" },
-            { "rolename": "ADMIN" },
+            { "rolename": "USER", "active": True },
+            { "rolename": "MODERATOR", "active": True },
+            { "rolename": "ADMIN", "active": True },
         ]
     )
 
