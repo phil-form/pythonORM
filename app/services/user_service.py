@@ -10,9 +10,6 @@ class UserService(BaseService):
     def find_all(self):
         return [UserMapper.entity_to_dto(user) for user in User.query.filter_by(active=True).all()]
 
-    def find_all_no_dto(self):
-        return User.query.all()
-
     def find_one(self, entity_id: int):
         return UserMapper.entity_to_dto(User.query.filter_by(userid=entity_id).first())
 
@@ -23,6 +20,9 @@ class UserService(BaseService):
         password = data.userpassword.encode('utf-8')
         salt = bcrypt.gensalt()
         data.userpassword = bcrypt.hashpw(password, salt).decode('utf-8')
+
+        role_user = Role.query.filter_by(rolename="USER").one()
+        data.add_role(role_user)
 
         try:
             db.session.add(data)
@@ -36,9 +36,6 @@ class UserService(BaseService):
         user = User.query.filter_by(userid=entity_id).first()
         user.useremail = data.useremail
         user.userdescription = data.userdescription
-
-        role_user = Role.query.filter_by(rolename="USER").one()
-        user.add_role(role_user)
 
         try:
             db.session.commit()

@@ -1,3 +1,4 @@
+from app.mappers.abstract_mapper import AbstractMapper
 from app.models.user import User
 from app.dtos.user_dto import UserDTO
 from app.forms.UserRegisterForm import UserRegisterForm
@@ -5,7 +6,7 @@ from app.forms.UserUpdateForm import UserUpdateForm
 from app.forms.UserLoginForm import UserLoginForm
 
 
-class UserMapper:
+class UserMapper(AbstractMapper):
     @staticmethod
     def entity_to_dto(entity: User) -> UserDTO:
         return UserDTO.build_from_entity(entity)

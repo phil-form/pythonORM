@@ -12,7 +12,8 @@ class User(db.Model, BaseEntity):
     useremail = db.Column(db.String(100), unique=True, nullable=False, index=True)
     userpassword = db.Column(db.String(100), nullable=False)
     userdescription = db.Column(db.String(255), nullable=False)
-    roles = db.relationship('UserRole')
+    roles = db.relationship('UserRole', cascade='delete, delete-orphan')
+    baskets = db.relationship('Basket', cascade='delete')
 
     @auth_required(level="ADMIN")
     def add_role(self, role: Role):

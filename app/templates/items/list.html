@@ -1,0 +1,13 @@
+{% extends "layout/layout.html" %}
+{% block body %}
+{% for item in items %}
+    <div>
+        <span>
+            {{ item.itemname }}
+        </span>
+        <span>
+            {{ item.itemdescription }}
+        </span>
+    </div>
+{% endfor %}
+{% endblock %}

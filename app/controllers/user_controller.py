@@ -8,17 +8,19 @@ from app.forms.UserUpdateForm import UserUpdateForm
 
 userService = UserService()
 
+# http://localhost:8080/users -> GET
 @app.route('/users')
 def getUserList():
     return render_template('users/list.html', users=userService.find_all())
 
+# http://localhost:8080/users/5 -> GET
 @app.route('/users/<int:userid>', methods=["GET"])
 def getOneUser(userid: int):
     user = userService.find_one(userid)
 
     return render_template('users/profile.html', user=user)
 
-
+# http://localhost:8080/users/register -> GET | POST
 @app.route('/users/register', methods=["GET", "POST"])
 def register():
     form = UserRegisterForm(request.form)
