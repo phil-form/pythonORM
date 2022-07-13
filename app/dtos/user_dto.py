@@ -14,6 +14,9 @@ class UserDTO(AbstractDTO):
     def is_admin(self):
         return "ADMIN" in self.userroles
 
+    def  get_roles(self):
+        return [role.rolename for role in self.userroles]
+
     @staticmethod
     def build_from_entity(user: User):
         user_dto = UserDTO()
@@ -24,7 +27,9 @@ class UserDTO(AbstractDTO):
         user_dto.userdescription = user.userdescription
         user_dto.userroles = []
         for role in user.roles:
-            user_dto.userroles.append(RoleDTO(role.rel_role.roleid, role.rel_role.rolename))
+            user_dto.userroles.append(RoleDTO.build_from_entity(role.rel_role))
+
+        return user_dto
 
     def get_json(self):
         pass

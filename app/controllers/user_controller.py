@@ -1,12 +1,14 @@
 from app.decorators.auth_required import auth_required
+from app.services.role_service import RoleService
 from app.services.user_service import UserService
 from app import app
-from flask import redirect, render_template, request, session, url_for, jsonify
-from app.forms.UserRegisterForm import UserRegisterForm
-from app.forms.UserLoginForm import UserLoginForm
-from app.forms.UserUpdateForm import UserUpdateForm
+from flask import redirect, render_template, request, session, url_for
+from app.forms.user.user_register_form import UserRegisterForm
+from app.forms.user.user_login_form import UserLoginForm
+from app.forms.user.user_update_form import UserUpdateForm
 
 userService = UserService()
+roleService = RoleService()
 
 # http://localhost:8080/users -> GET
 @app.route('/users')
@@ -27,7 +29,7 @@ def register():
 
     if request.method == 'POST':
         if form.validate():
-            user = userService.insert(form.getAsUser())
+            user = userService.insert(form)
 
             return redirect(url_for('getOneUser', userid=user.userid))
 
@@ -38,15 +40,16 @@ def register():
 @auth_required(level="ADMIN", or_is_current_user=True)
 def userUpdate(userid: int):
     form = UserUpdateForm(request.form)
+    roles = roleService.find_all()
 
     if request.method == 'POST':
         if form.validate():
-            user = userService.update(userid, form.getAsUser())
+            user = userService.update(userid, form)
 
             return redirect(url_for('getOneUser', userid=userid))
 
     user = userService.find_one(userid)
-    return render_template('users/update.html', form=form, user=user)
+    return render_template('users/update.html', form=form, user=user, roles=roles)
 
 
 @app.route('/login', methods=["GET", "POST"])
@@ -55,7 +58,7 @@ def login():
 
     if request.method == 'POST':
         if form.validate():
-            user = userService.login(form.getAsUser())
+            user = userService.login(form)
 
             if user != None:
                 session['username'] = user.username
