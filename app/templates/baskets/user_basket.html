@@ -1,0 +1,15 @@
+{% extends "layout/layout.html" %}
+{% block body %}
+<h1>
+    My basket
+</h1>
+
+{% for item in items %}
+<div>
+    <p>{{ item.itemname }}</p>
+    <p>{{ item.itemdescription }}</p>
+    <p>{{ item.quantity }}</p>
+</div>
+{% endfor %}
+
+{% endblock %}

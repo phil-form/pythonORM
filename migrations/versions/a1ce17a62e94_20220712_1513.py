@@ -6,11 +6,6 @@ Create Date: 2022-07-12 15:13:08.149188
 
 """
 from alembic import op
-import sqlalchemy as sa
-from  sqlalchemy import Table, MetaData
-from sqlalchemy.orm.session import Session
-from app.models.user_role import UserRole
-
 
 # revision identifiers, used by Alembic.
 revision = 'a1ce17a62e94'
