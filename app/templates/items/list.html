@@ -1,0 +1,9 @@
+{% extends "layout/layout.html" %}
+{% block body %}
+{% for item in items %}
+<div>
+    <p>{{ item.itemname }}</p>
+    <p>{{ item.itemdescription }}</p>
+</div>
+{% endfor %}
+{% endblock %}
