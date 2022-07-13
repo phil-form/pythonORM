@@ -1,0 +1,14 @@
+{% extends "layout/layout.html" %}
+{% block body %}
+<h1>
+    New item
+</h1>
+<form id="additem" method="post">
+    {{ form.csrf_token }}
+    <input type="text" name="itemname" placeholder="itemname" required>
+    <input type="text" name="itemdescription" placeholder="itemdescription" required>
+    <input type="number" name="itemstock" placeholder="itemstock" required>
+
+    <input type="submit" value="Send">
+</form>
+{% endblock %}
