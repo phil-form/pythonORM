@@ -1,0 +1,10 @@
+{% extends "layout/layout.html" %}
+{% block body %}
+{% for basket in baskets %}
+    <div>
+        <h1>
+            {{ basket.basketid }} : {{ basket.basketclosed }}
+        </h1>
+    </div>
+{% endfor %}
+{% endblock %}

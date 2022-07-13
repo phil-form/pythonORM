@@ -1,0 +1,14 @@
+{% extends "layout/layout.html" %}
+{% block body %}
+    <div>
+        <h1>
+            {{ basket.basketid }} : {{ basket.basketclosed }} : {{ basket.userid }}
+        </h1>
+        <h2>
+            Contenu:
+        </h2>
+        <div>
+            {{ basket.basketitems}}
+        </div>
+    </div>
+{% endblock %}
