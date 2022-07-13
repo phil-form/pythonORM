@@ -10,4 +10,13 @@ class ItemMapper(AbstractMapper):
 
     @staticmethod
     def form_to_entity(form, item: Item):
-        pass
+        if isinstance(form, ItemNewForm):
+            item.itemname        = form.itemname.data
+            item.itemdescription = form.itemdescription.data
+            item.itemstock       = form.itemstock.data
+
+        #elif isinstance(form, UserUpdateForm):
+        #    item.itemdescription = form.itemdescription.data
+        #    item.itemstock       = form.itemstock.data
+
+        return item

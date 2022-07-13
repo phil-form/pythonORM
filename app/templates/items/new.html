@@ -1,0 +1,14 @@
+{% extends "layout/layout.html" %}
+{% block body %}
+<h1>
+    New
+</h1>
+<form id="new" method="post">
+    {{ form.csrf_token }}
+    <input type="text"   name="itemname"        placeholder="name"        required>
+    <input type="text"   name="itemdescription" placeholder="description" required>
+    <input type="number" name="itemstock"       placeholder="1"           value="1">
+
+    <input type="submit" value="Send">
+</form>
+{% endblock %}
