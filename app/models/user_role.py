@@ -2,7 +2,7 @@ from app import db
 from app.models.base_entity import BaseEntity
 
 class UserRole(BaseEntity, db.Model):
-    __tablename__ = "user_roles"
+    __tablename__ = "userroles"
     roleid = db.Column(db.ForeignKey("users.userid"), primary_key=True)
     userid = db.Column(db.ForeignKey("roles.roleid"), primary_key=True)
 
