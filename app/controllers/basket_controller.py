@@ -4,7 +4,7 @@ from app import app
 from app.decorators.auth_required import auth_required
 from app.services.basket_service import BasketService
 
-basketService = BasketService
+basketService = BasketService()
 
 @app.route('/basket/all')
 @auth_required(level="ADMIN")

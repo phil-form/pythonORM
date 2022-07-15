@@ -9,5 +9,8 @@ class ItemMapper(AbstractMapper):
         ItemDTO.build_from_entity(item)
 
     @staticmethod
-    def form_to_entity(form, item: Item):
-        pass
+    def form_to_entity(form, item: Item) -> Item:
+        item.itemname = form.itemname.data
+        item.itemdescription = form.itemdescription.data
+
+        return item

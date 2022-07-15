@@ -1,5 +1,5 @@
-from flask import render_template
-
+from flask import render_template, request, redirect, url_for
+from app.forms.item.item_add_form import ItemAddForm
 from app import app
 from app.services.item_service import ItemService
 
@@ -12,3 +12,19 @@ def getItemList():
 @app.route('/items/<int:itemid>')
 def getItemDetails(itemid):
     return render_template('items/details.html', item=itemService.find_one(itemid))
+
+@app.route('/items/add', methods=["GET", "POST"])
+def add():
+    print('ADD CONTROLLER')
+    form = ItemAddForm(request.form)
+
+    if request.method == 'POST':
+        print('POST METHOD FOR FORM')
+        print(form)
+        if form.validate():
+            print('FORM VALIDATED')
+            item = itemService.insert(form)
+
+            return redirect(url_for('getItemDetails', itemid=item.itemid))
+
+    return render_template('items/add.html', form=form)
