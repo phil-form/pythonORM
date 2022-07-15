@@ -1,0 +1,25 @@
+{% extends "layout/layout.html" %}
+{% block body %}
+<div>
+    <form id="add_item" method="post">
+        {{ form.csrf_token }}
+        <input type="text" name="itemname" placeholder="Name"
+               value="{{ form.itemname.data }}" required>
+        {% if form.errors and "itemname" in form.errors.keys() %}
+            {{ form.errors['itemnames'] }}
+        {% endif %}
+        <input type="text" name="itemdescription" placeholder="Description"
+               value="{{ form.itemdescription.data }}" required>
+        {% if form.errors and "itemdescription" in form.errors.keys() %}
+            {{ form.errors['itemdescription'] }}
+        {% endif %}
+        <input type="number" name="itemstock" placeholder="Stock"
+               value="{{ form.itemstock.data }}" required>
+        {% if form.errors and "itemstock" in form.errors.keys() %}
+            {{ form.errors['itemstock'] }}
+        {% endif %}
+
+        <input type="submit" value="Send">
+    </form>
+</div>
+{% endblock %}
