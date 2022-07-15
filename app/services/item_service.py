@@ -16,10 +16,8 @@ class ItemService(BaseService):
         return ItemDTO.build_from_entity(Item.query.filter_by(**kwargs).one())
 
     def insert(self, data):
-        print('INSERT SERVICE')
         item = Item()
         ItemMapper.form_to_entity(data, item)
-        print(item)
 
         try:
             db.session.add(item)

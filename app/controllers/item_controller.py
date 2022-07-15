@@ -15,14 +15,11 @@ def getItemDetails(itemid):
 
 @app.route('/items/add', methods=["GET", "POST"])
 def add():
-    print('ADD CONTROLLER')
+    print(request.form)
     form = ItemAddForm(request.form)
 
     if request.method == 'POST':
-        print('POST METHOD FOR FORM')
-        print(form)
         if form.validate():
-            print('FORM VALIDATED')
             item = itemService.insert(form)
 
             return redirect(url_for('getItemDetails', itemid=item.itemid))

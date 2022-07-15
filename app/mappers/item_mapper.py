@@ -11,6 +11,6 @@ class ItemMapper(AbstractMapper):
     @staticmethod
     def form_to_entity(form, item: Item) -> Item:
         item.itemname = form.itemname.data
-        item.itemdescription = form.itemdescription.data
+        item.itemdescription = form.itemdescritpion.data
 
         return item
