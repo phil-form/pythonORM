@@ -5,4 +5,4 @@ from app.models.item import Item
 
 class ItemAddForm(FlaskForm):
     itemname = StringField('itemname', validators=[DataRequired()])
-    itemdescritpion = StringField('itemdescritpion', validators=[DataRequired()])
+    itemdescription = StringField('itemdescription', validators=[DataRequired()])
