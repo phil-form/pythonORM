@@ -2,6 +2,8 @@ from app import db
 from app.dtos.basket_dto import BasketDTO
 from app.mappers.basket_mapper import BasketMapper
 from app.models.basket import Basket
+from app.models.item import Item
+from app.models.basket_item import BasketItem
 from app.services.base_service import BaseService
 
 
@@ -52,3 +54,19 @@ class BasketService(BaseService):
             db.session.rollback()
 
         return basket.basketid
+
+    def addToBasket(self, basketid, itemid):
+        item = Item.query.filter_by(itemid=itemid).one()
+        basket = Basket.query.filter_by(basketid=basketid).one()
+
+        basketItem = BasketItem()
+        basketItem.basketid = basketid
+        basketItem.itemid = itemid
+        basket.items.append(basketItem)
+
+        try:
+            db.session.commit()
+        except:
+            db.session.rollback()
+        
+        return basket

@@ -28,6 +28,7 @@
                                 {% if "ADMIN" in session.get('userroles') %}
                                     <a class="btn btn-primary" href="{{ url_for('updateItem', itemid=item.itemid) }}">Edit</a>
                                 {% endif %}
+                                <a class="btn btn-primary" href="{{ url_for('addItemBasket', itemid=item.itemid) }}">Add to basket</a>
                             </div>
                         {% endif %}
                     </td>

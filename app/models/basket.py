@@ -10,4 +10,4 @@ class Basket(BaseEntity, db.Model):
 
     # link User.baskets member to Basket
     user = db.relationship("User", back_populates="baskets")
-    items = db.relationship("BasketItem", cascade='delete, delete-orphan')
+    items = db.relationship("BasketItem", cascade='all, delete-orphan')

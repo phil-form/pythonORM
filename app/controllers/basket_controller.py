@@ -1,4 +1,4 @@
-from flask import render_template, session
+from flask import render_template, session, request
 
 from app import app
 from app.decorators.auth_required import auth_required
@@ -23,5 +23,20 @@ def getBasketDetail():
     basket = BasketDTO()
     basket.basketclosed = False
     basket.user = userService.find_one(session.get('userid'))
+    return render_template('baskets/details.html',
+                           basket=basket, items=items, is_basket=True)
+
+@app.route('/basket/addItem', methods=['GET', 'POST'])
+def addItemBasket():
+    userid = session.get('userid')
+    print(f'USER ID BY SESSION: {userid}')
+    basketid = basketService.find_one_by(userid=userid).basketid
+    itemid = request.args.get('itemid')
+
+    basket = basketService.addToBasket(basketid, itemid)
+    print(f'RES BASKET: {basket.items}')
+    items = basket.items
+
+
     return render_template('baskets/details.html',
                            basket=basket, items=items, is_basket=True)
