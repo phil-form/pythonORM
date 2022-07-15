@@ -3,16 +3,9 @@
 
 {{ basket.user.username }}
 <div>
-    {% for item in basket.items  %}
-        <div>
-            <span>
-                {{ item.itemname }}
-            </span>
-            <span>
-                {{ item.itemquantity }}
-            </span>
-        </div>
-    {% endfor %}
+    {% include 'items/item_list.html' %}
+
+    <a class="btn btn-primary" href="{{ url_for('index') }}">Checkout</a>
 </div>
 
 {% endblock %}

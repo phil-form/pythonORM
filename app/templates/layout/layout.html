@@ -36,6 +36,11 @@
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     {% if session.get('userid') %}
                         <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('getBasketDetail') }}">
+                                Basket
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('profile') }}">
                                 Profile
                             </a>
