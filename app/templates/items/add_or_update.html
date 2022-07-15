@@ -1,25 +1,39 @@
 {% extends "layout/layout.html" %}
 {% block body %}
-<div>
-    <form id="add_item" method="post">
-        {{ form.csrf_token }}
-        <input type="text" name="itemname" placeholder="Name"
+<h1>
+    {% if form.itemname.data != '' %}
+    Update item
+    {% else %}
+    New item
+    {% endif %}
+</h1>
+<form id="add_item" method="post">
+    {{ form.csrf_token }}
+    <div class="mb-3">
+        <label for="itemname" class="form-label">Item name</label>
+        <input type="text" id="itemname" name="itemname" placeholder="Name"
                value="{{ form.itemname.data }}" required>
         {% if form.errors and "itemname" in form.errors.keys() %}
-            {{ form.errors['itemnames'] }}
+        {{ form.errors['itemnames'] }}
         {% endif %}
-        <input type="text" name="itemdescription" placeholder="Description"
+    </div>
+    <div class="mb-3">
+        <label for="itemdescription" class="form-label">Item name</label>
+        <input type="text" id="itemdescription" name="itemdescription" placeholder="Description"
                value="{{ form.itemdescription.data }}" required>
         {% if form.errors and "itemdescription" in form.errors.keys() %}
-            {{ form.errors['itemdescription'] }}
+        {{ form.errors['itemdescription'] }}
         {% endif %}
-        <input type="number" name="itemstock" placeholder="Stock"
+    </div>
+    <div class="mb-3">
+        <label for="itemstock" class="form-label">Item name</label>
+        <input type="number" id="itemstock" name="itemstock" placeholder="Stock"
                value="{{ form.itemstock.data }}" required>
         {% if form.errors and "itemstock" in form.errors.keys() %}
-            {{ form.errors['itemstock'] }}
+        {{ form.errors['itemstock'] }}
         {% endif %}
+    </div>
+    <input class="btn btn-primary" type="submit" value="Send">
+</form>
 
-        <input type="submit" value="Send">
-    </form>
-</div>
 {% endblock %}
