@@ -2,6 +2,7 @@ from app import db
 from app.dtos.basket_dto import BasketDTO
 from app.mappers.basket_mapper import BasketMapper
 from app.models.basket import Basket
+from app.models.basket_item import BasketItem
 from app.services.base_service import BaseService
 
 
@@ -39,6 +40,35 @@ class BasketService(BaseService):
             db.session.rollback()
 
         return self.find_one(entity_id)
+
+    def addToBasket(self, basketid, itemid, itemqty: int):
+        basket = Basket.query.filter_by(basketid=basketid).one()
+        basketitem = BasketItem.query.filter_by(basketid=basketid, itemid=itemid).first()
+        if basketitem is None:
+            basketitem = BasketItem()
+            basketitem.itemid = itemid
+            basketitem.basketid = basketid
+            basketitem.itemquantity = itemqty
+            basket.items.append(basketitem)
+        else:
+            basketitem.itemquantity = itemqty
+
+        try:
+            db.session.commit()
+        except:
+            db.session.rollback()
+
+        return self.find_one(basket.basketid)
+
+    def updateBasketQty(self, basketid, itemid, qty):
+        basketitem = BasketItem.query.filter_by(basketid=basketid, itemid=itemid).first()
+        if basketitem is not None:
+            basketitem.itemquantity = qty
+
+        try:
+            db.session.commit()
+        except:
+            db.session.rollback()
 
     def delete(self, entity_id: int):
         basket = Basket.query.filter_by(basketid=entity_id).one()

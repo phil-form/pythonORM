@@ -18,7 +18,7 @@
         {% endif %}
     </div>
     <div class="mb-3">
-        <label for="itemdescription" class="form-label">Item name</label>
+        <label for="itemdescription" class="form-label">Item description</label>
         <input type="text" id="itemdescription" name="itemdescription" placeholder="Description"
                value="{{ form.itemdescription.data }}" required>
         {% if form.errors and "itemdescription" in form.errors.keys() %}
@@ -26,7 +26,7 @@
         {% endif %}
     </div>
     <div class="mb-3">
-        <label for="itemstock" class="form-label">Item name</label>
+        <label for="itemstock" class="form-label">Item stock</label>
         <input type="number" id="itemstock" name="itemstock" placeholder="Stock"
                value="{{ form.itemstock.data }}" required>
         {% if form.errors and "itemstock" in form.errors.keys() %}
