@@ -5,7 +5,7 @@ from app.models.basket import Basket
 
 
 class BasketDTO(AbstractDTO):
-    def __init__(self, basket: Basket):
+    def __init__(self):
         self.basketid = None
         self.basketclosed = None
         self.user = None
