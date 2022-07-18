@@ -1,9 +1,12 @@
+from flask import session
+
 from app import db
 from app.dtos.basket_dto import BasketDTO
+from app.forms.basket.basket_add_item_form import BasketAddItemForm
 from app.mappers.basket_mapper import BasketMapper
 from app.models.basket import Basket
 from app.models.item import Item
-from app.models.basket_item import BasketItem
+from app.models.user import User
 from app.services.base_service import BaseService
 
 
@@ -55,18 +58,51 @@ class BasketService(BaseService):
 
         return basket.basketid
 
-    def addToBasket(self, basketid, itemid):
-        item = Item.query.filter_by(itemid=itemid).one()
-        basket = Basket.query.filter_by(basketid=basketid).one()
+    def add_item(self, form: BasketAddItemForm):
+        userid = session.get('userid')
+        item = Item.query.filter_by(itemid=int(form.itemid.data)).one()
+        basket = Basket.query.filter_by(userid=userid, basketclosed=False).first()
 
-        basketItem = BasketItem()
-        basketItem.basketid = basketid
-        basketItem.itemid = itemid
-        basket.items.append(basketItem)
+        if basket is None:
+            basket = Basket()
+            basket.user = User.query.filter_by(userid=userid).one()
+            db.session.add(basket)
+
+        basket_item, exist = basket.add_item(item, int(form.itemquantity.data))
+        print(basket.__dict__)
+        if not exist:
+            db.session.add(basket_item)
 
         try:
             db.session.commit()
-        except:
+        except Exception as e:
+            print(e)
             db.session.rollback()
-        
+            return None
+
         return basket
+
+    def remove_item(self, itemid):
+        userid = session.get('userid')
+        item = Item.query.filter_by(itemid=itemid).one()
+        basket = Basket.query.filter_by(userid=userid, basketclosed=False).first()
+
+        if basket is None:
+            return None
+
+        try:
+            basket.remove_item(item)
+            db.session.commit()
+        except Exception as e:
+            print(e)
+            db.session.rollback()
+
+    def checkout_basket(self):
+        userid = session.get('userid')
+        basket = Basket.query.filter_by(userid=userid, basketclosed=False).first()
+        basket.basketclosed = True
+
+        basket = Basket()
+        basket.user = User.query.filter_by(userid=userid).one()
+        db.session.add(basket)
+        db.session.commit()
