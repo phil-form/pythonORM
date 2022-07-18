@@ -3,11 +3,14 @@
 <div>
     <form id="add_item" method="post">
         {{ form.csrf_token }}
-        <input type="text" name="itemname" placeholder="Name"
-               value="{{ form.itemname.data }}" required>
-        {% if form.errors and "itemname" in form.errors.keys() %}
-            {{ form.errors['itemnames'] }}
-        {% endif %}
+        <div class="mb-3">
+            <input type="text" name="itemname" placeholder="Name"
+            value="{{ form.itemname.data }}" required>...
+            {% if form.errors and "itemname" in form.errors.keys() %}
+                {{ form.errors['itemnames'] }}
+            {% endif %}
+        </div>
+
         <input type="text" name="itemdescription" placeholder="Description"
                value="{{ form.itemdescription.data }}" required>
         {% if form.errors and "itemdescription" in form.errors.keys() %}

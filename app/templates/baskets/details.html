@@ -12,6 +12,7 @@
     {% for item in items %}
         console.log({{ item.__dict__ | tojson }})
     {% endfor %}
+    
     function sendAjax(url, method='get', data = null)
     {
         return new Promise((resolve, reject) =>
@@ -43,7 +44,7 @@
 
     checkoutBtn.addEventListener('click', (event) =>
     {
-        sendAjax('{{ url_for('checkout_basket') }}', 'post')
+        sendAjax('{{ url_for("checkout_basket") }}', 'post')
             .then((data) =>
             {
                 console.log(data);
