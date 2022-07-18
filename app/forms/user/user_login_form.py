@@ -6,10 +6,3 @@ from app.models.user import User
 class UserLoginForm(FlaskForm):
     username = StringField('username', validators=[DataRequired()])
     userpassword = StringField('userpassword', validators=[DataRequired()])
-
-    def getAsUser(self) -> User:
-        user = User()
-        user.username = self.username.data
-        user.userpassword = self.userpassword.data
-
-        return user

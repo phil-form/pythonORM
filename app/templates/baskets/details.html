@@ -1,0 +1,11 @@
+{% extends "layout/layout.html" %}
+{% block body %}
+
+{{ basket.user.username }}
+<div>
+    {% include 'items/item_list.html' %}
+
+    <a class="btn btn-primary" href="{{ url_for('index') }}">Checkout</a>
+</div>
+
+{% endblock %}
