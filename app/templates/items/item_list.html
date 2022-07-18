@@ -19,7 +19,7 @@
                     <td>
                         {% if is_basket %}
                             <div>
-                                <form method="post" action="{{ url_for('add_item_to_basket') }}">
+                                <form id="isBasketItemID{{ item.itemid }}" method="post" action="{{ url_for('add_item_to_basket') }}">
                                     <input name="itemid" type="number" value="{{ item.itemid }}" hidden>
                                     <input name="itemquantity" type="number" value="{{ item.itemquantity }}" required>
                                     <input class="btn btn-primary" type="submit" value="Update">
@@ -49,6 +49,19 @@
                                         e.preventDefault();
 
                                         const data = new FormData(document.forms['formItemID{{ item.itemid }}']);
+                                        sendAjax("{{ url_for('add_item_to_basket') }}", 'post', data)
+                                            .then((res) =>
+                                            {
+                                                console.log(res)
+                                            });
+                                    });
+
+                                    document.getElementById('isBasketItemID{{ item.itemid }}')
+                                    .addEventListener('click', (e) =>
+                                    {
+                                        e.preventDefault();
+
+                                        const data = new FormData(document.forms['isBasketItemID{{ item.itemid }}']);
                                         sendAjax("{{ url_for('add_item_to_basket') }}", 'post', data)
                                             .then((res) =>
                                             {
