@@ -4,6 +4,7 @@ from app import db
 from app.forms.user.user_login_form import UserLoginForm
 from app.forms.user.user_register_form import UserRegisterForm
 from app.forms.user.user_update_form import UserUpdateForm
+from app.models.basket import Basket
 from app.models.role import Role
 from app.models.user import User
 from app.services.base_service import BaseService
@@ -27,6 +28,7 @@ class UserService(BaseService):
         password = user.userpassword.encode('utf-8')
         salt = bcrypt.gensalt()
         user.userpassword = bcrypt.hashpw(password, salt).decode('utf-8')
+        user.baskets.append(Basket())
 
         role_user = Role.query.filter_by(rolename="USER").one()
         user.add_role(role_user)
