@@ -13,7 +13,11 @@ roleService = RoleService()
 # http://localhost:8080/users -> GET
 @app.route('/users')
 def getUserList():
-    return render_template('users/list.html', users=userService.find_all())
+    users=userService.find_all()
+    usersJSON = []
+    for user in users:
+        usersJSON.append(user.get_json_parsable())
+    return render_template('users/list.html', users=usersJSON)
 
 # http://localhost:8080/users/5 -> GET
 @app.route('/users/<int:userid>', methods=["GET"])

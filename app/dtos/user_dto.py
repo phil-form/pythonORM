@@ -1,6 +1,7 @@
 from app.dtos.abstract_dto import AbstractDTO
 from app.models.user import User
 from app.dtos.role_dto import RoleDTO
+import json
 
 
 class UserDTO(AbstractDTO):
@@ -32,4 +33,6 @@ class UserDTO(AbstractDTO):
         return user_dto
 
     def get_json_parsable(self):
-        pass
+        rval = {key:val for key, val in self.__dict__.items() if key != 'userroles'}
+        rval['userroles'] = [role.get_json_parsable() for role in self.userroles]
+        return rval

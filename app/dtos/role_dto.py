@@ -17,5 +17,5 @@ class RoleDTO(AbstractDTO):
         return role_dto
 
     def get_json_parsable(self):
-        pass
+        return self.__dict__
 
