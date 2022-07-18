@@ -1,22 +1,28 @@
+from app.dtos.abstract_dto import AbstractDTO
 from app.dtos.item_dto import ItemDTO
+from app.dtos.user_dto import UserDTO
 from app.models.basket import Basket
-from app.models.item import Item
 
 
-class BasketDTO:
-    def __init__(self, basketid, basketclosed, userid, items):
-        self.basketid = basketid
-        self.basketclosed = basketclosed
-        self.userid = userid
+class BasketDTO(AbstractDTO):
+    def __init__(self):
+        self.basketid = None
+        self.basketclosed = None
+        self.user = None
         self.items = []
-        for item in items:
-            self.items.append(
-                ItemDTO(item.rel_item.itemid, item.rel_item.itemname, item.rel_item.itemdescription, item.itemquantity
-                        ).__dict__)
-
-    def has_item(self, item: Item):
-        return item in self.items
 
     @staticmethod
     def build_from_entity(basket: Basket):
-        return BasketDTO(basket.basketid, basket.basketclosed, basket.userid, basket.items)
+        basket_dto = BasketDTO()
+        basket_dto.basketid = basket.basketid
+        basket_dto.basketclosed = basket.basketclosed
+        basket_dto.user = UserDTO.build_from_entity(basket.user)
+        basket_dto.items = []
+
+        for basket_item in basket.items:
+            basket_dto.items.append(ItemDTO.build_from_entity(basket_item))
+
+        return basket_dto
+
+    def get_json(self):
+        pass

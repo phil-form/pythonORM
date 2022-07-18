@@ -1,0 +1,16 @@
+{% extends "layout/layout.html" %}
+{% block body %}
+<div>
+    <span>
+        <p>Item name :</p>
+        <p>{{ item.itemname }}</p>
+    </span>
+    <span>
+        <p>Item description :</p>
+        <p>{{ item.itemdescription }}</p>
+    </span>
+    <form method="post" action="{{ url_for('getBasketDetail', itemid=item.itemid, itemqty=1) }}">
+        <input type="submit" class="btn btn-primary" value="Add to cart">
+    </form>
+</div>
+{% endblock %}s

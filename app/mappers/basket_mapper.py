@@ -1,26 +1,13 @@
 from app.dtos.basket_dto import BasketDTO
+from app.mappers.abstract_mapper import AbstractMapper
 from app.models.basket import Basket
 
 
-class BasketMapper:
+class BasketMapper(AbstractMapper):
     @staticmethod
-    def entity_to_dto(entity: Basket) -> BasketDTO:
+    def entity_to_dto(entity: Basket):
         return BasketDTO.build_from_entity(entity)
 
-    # @staticmethod
-    # def form_to_entity(form, basket: Basket) -> Basket:
-    #     if isinstance(form, ):
-    #         user.useremail = form.useremail.data
-    #         user.userpassword = form.userpassword.data
-    #         user.username = form.username.data
-    #         user.userdescription = form.userdescription.data
-    #
-    #     elif isinstance(form, UserUpdateForm):
-    #         user.useremail = form.useremail.data
-    #         user.userdescription = form.userdescription.data
-    #
-    #     elif isinstance(form, UserLoginForm):
-    #         user.userpassword = form.userpassword.data
-    #         user.username = form.username.data
-    #
-    #     return user
+    @staticmethod
+    def form_to_entity(form, basket: Basket):
+        pass

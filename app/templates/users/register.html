@@ -5,12 +5,27 @@
 </h1>
 <form id="register" method="post">
     {{ form.csrf_token }}
-    <input type="text" name="username" placeholder="username" required>
-    <input type="password" name="userpassword" placeholder="password" required>
-    <input type="password" name="confirm" placeholder="confirm" required>
-    <input type="text" name="useremail" placeholder="email" required>
-    <input type="text" name="userdescription" placeholder="description" required>
+    <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" id="username" name="username" placeholder="username" required>
+    </div>
+    <div class="mb-3">
+        <label for="userpassword" class="form-label">Password</label>
+        <input type="password" id="userpassword" name="userpassword" placeholder="password" required>
+    </div>
+    <div class="mb-3">
+        <label for="confirm" class="form-label">Confirm</label>
+        <input type="password" id="confirm" name="confirm" placeholder="confirm" required>
+    </div>
+    <div class="mb-3">
+        <label for="useremail" class="form-label">Email</label>
+        <input type="text" id="useremail" name="useremail" placeholder="email" required>
+    </div>
+    <div class="mb-3">
+        <label for="userdescription" class="form-label">Description</label>
+        <input type="text" id="userdescription" name="userdescription" placeholder="description" required>
+    </div>
 
-    <input type="submit" value="Send">
+    <input class="btn btn-primary" type="submit" value="Send">
 </form>
 {% endblock %}

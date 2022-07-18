@@ -1,13 +1,13 @@
-from sqlalchemy import UniqueConstraint
-
 from app import db
 from app.models.base_entity import BaseEntity
 
 
-class Basket(db.Model, BaseEntity):
+class Basket(BaseEntity, db.Model):
     __tablename__ = "baskets"
     basketid = db.Column(db.Integer, primary_key=True)
     basketclosed = db.Column(db.Boolean, nullable=False, default=False)
-    userid = db.Column(db.ForeignKey("users.userid"), nullable=False)
-    UniqueConstraint('basketid', 'userid', name='uk_baskets_buid')
-    items = db.relationship('BasketItem')
+    userid = db.Column(db.ForeignKey('users.userid'))
+
+    # link User.baskets member to Basket
+    user = db.relationship("User", back_populates="baskets")
+    items = db.relationship("BasketItem", cascade='all, delete-orphan')
