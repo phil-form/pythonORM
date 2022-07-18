@@ -1,0 +1,69 @@
+{% block body %}
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+                <tr>
+                    <th scope="row">{{ item.itemid }}</th>
+                    <td> {{ item.itemname }}</td>
+                    <td> {{ item.itemdescription }}</td>
+                    <td> {{ item.itemquantity }}</td>
+                    <td>
+                        {% if is_basket %}
+                            <div>
+                                <form method="post" action="{{ url_for('add_item_to_basket') }}">
+                                    <input name="itemid" type="number" value="{{ item.itemid }}" hidden>
+                                    <input name="itemquantity" type="number" value="{{ item.itemquantity }}" required>
+                                    <input class="btn btn-primary" type="submit" value="Update">
+                                </form>
+                                <form method="post" action="{{ url_for('remove_item_to_basket', itemid=item.itemid) }}">
+                                    <input class="btn btn-primary" type="submit" value="Remove">
+                                </form>
+                            </div>
+                        {% else %}
+                            <div class="btn-group" role="group">
+                                <a class="btn btn-primary" href="{{ url_for('getItemDetails', itemid=item.itemid) }}">Details</a>
+                                {% if "ADMIN" in session.get('userroles') %}
+                                    <a class="btn btn-primary" href="{{ url_for('updateItem', itemid=item.itemid) }}">Edit</a>
+                                {% endif %}
+                                <form id="formItemID{{ item.itemid }}" method="post" actio="{{ url_for('add_item_to_basket') }}">
+                                    <input name="itemid" type="number" value="{{ item.itemid }}" hidden>
+                                    <input name="itemquantity" type="number" value="{{ item.itemquantity }}" required>
+                                    <input id="submitFormItemID{{ item.itemid }}" class="btn btn-primary" type="submit" value="Update">
+                                </form>
+                            </div>
+                            <script type="module">
+                                import { sendAjax } from '/static/js/ajax-tools.js';
+
+                                document.getElementById('submitFormItemID{{ item.itemid }}')
+                                    .addEventListener('click', (e) =>
+                                    {
+                                        e.preventDefault();
+
+                                        const data = new FormData(document.forms['formItemID{{ item.itemid }}']);
+<<<<<<< HEAD
+                                        sendAjax('{{ url_for('add_item_to_basket') }}', 'post', data)
+=======
+                                        sendAjax("{{ url_for('add_item_to_basket') }}", 'post', data)
+>>>>>>> d1f6fa0a7fd4d2e738be78520d89c55f99ce8270
+                                            .then((res) =>
+                                            {
+                                                console.log(res)
+                                            });
+                                    });
+                            </script>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
