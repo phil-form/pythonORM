@@ -2,15 +2,16 @@
 {% block body %}
 <div>
     <span>
-        <p>Item name :</p>
-        <p>{{ item.itemname }}</p>
+        {{ item.itemname }}
     </span>
     <span>
-        <p>Item description :</p>
-        <p>{{ item.itemdescription }}</p>
+        {{ item.itemdescription }}
     </span>
-    <form method="post" action="{{ url_for('getBasketDetail', itemid=item.itemid, itemqty=1) }}">
-        <input type="submit" class="btn btn-primary" value="Add to cart">
+    <form method="post" action="{{ url_for('add_item_to_basket') }}">
+        {{ form.csrf_token }}
+        <input type="number" name="itemid" value="{{ item.itemid }}" hidden>
+        <input type="number" name="itemquantity" value="1">
+        <input type="submit" value="Add to basket">
     </form>
 </div>
-{% endblock %}s
+{% endblock %}

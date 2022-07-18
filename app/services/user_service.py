@@ -1,15 +1,15 @@
-import bcrypt
 from flask import session
 
 from app import db
 from app.forms.user.user_login_form import UserLoginForm
 from app.forms.user.user_register_form import UserRegisterForm
 from app.forms.user.user_update_form import UserUpdateForm
-from app.mappers.user_mapper import UserMapper
 from app.models.basket import Basket
 from app.models.role import Role
 from app.models.user import User
 from app.services.base_service import BaseService
+from app.mappers.user_mapper import UserMapper
+import bcrypt
 
 
 class UserService(BaseService):
@@ -28,12 +28,10 @@ class UserService(BaseService):
         password = user.userpassword.encode('utf-8')
         salt = bcrypt.gensalt()
         user.userpassword = bcrypt.hashpw(password, salt).decode('utf-8')
+        user.baskets.append(Basket())
 
         role_user = Role.query.filter_by(rolename="USER").one()
         user.add_role(role_user)
-
-        basket = Basket()
-        user.baskets.append(basket)
 
         try:
             db.session.add(user)
@@ -78,8 +76,7 @@ class UserService(BaseService):
         UserMapper.form_to_entity(form, user)
         to_login = self.find_one_by(username=user.username)
 
-        if to_login is not None and bcrypt.checkpw(user.userpassword.encode('utf-8'),
-                                                   to_login.userpassword.encode('utf-8')):
+        if to_login is not None and bcrypt.checkpw(user.userpassword.encode('utf-8'), to_login.userpassword.encode('utf-8')):
             return to_login
 
         return None
