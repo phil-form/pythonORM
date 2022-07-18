@@ -1,5 +1,5 @@
 from app import db
-from app.decorators.auth_required import auth_required
+from app.framework.decorators.auth_required import auth_required
 from app.models.base_entity import BaseEntity
 from app.models.role import Role
 from app.models.user_role import UserRole
@@ -13,7 +13,7 @@ class User(db.Model, BaseEntity):
     userpassword = db.Column(db.String(100), nullable=False)
     userdescription = db.Column(db.String(255), nullable=False)
     roles = db.relationship('UserRole', cascade='delete, delete-orphan')
-    baskets = db.relationship('Basket', cascade='all, delete-orphan')
+    baskets = db.relationship('Basket', cascade='all')
     tmp_roles = []
 
     def add_role(self, role: Role):
