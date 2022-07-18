@@ -1,8 +1,14 @@
 {% extends "layout/layout.html" %}
 {% block body %}
-{% for user in users %}
-    <div>
-        {{ user.username }}
-    </div>
-{% endfor %}
+<div id="userContainer"></div>
+<script>
+    const container = document.getElementById('userContainer');
+    {% for user in users %}
+        let div{{user.userid}} = document.createElement('div');
+        div{{user.userid}}.innerText = "{{ user.username}}";
+        container.appendChild(div{{user.userid}});
+    {% endfor %}
+
+</script>
+
 {% endblock %}

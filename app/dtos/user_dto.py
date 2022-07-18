@@ -13,7 +13,7 @@ class UserDTO(AbstractDTO):
     def is_admin(self):
         return "ADMIN" in self.userroles
 
-    def  get_roles(self):
+    def get_roles(self):
         return [role.rolename for role in self.userroles]
 
     @staticmethod
@@ -31,4 +31,4 @@ class UserDTO(AbstractDTO):
         return user_dto
 
     def get_json_parsable(self):
-        pass
+        return self.__dict__
