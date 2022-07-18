@@ -7,5 +7,5 @@ class AbstractDTO(ABC):
         pass
 
     @abstractmethod
-    def get_json(self):
+    def get_json_parsable(self):
         pass

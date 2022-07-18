@@ -28,5 +28,5 @@ class ItemDTO(AbstractDTO):
         return item_dto
 
 
-    def get_json(self):
-        pass
+    def get_json_parsable(self):
+        return self.__dict__

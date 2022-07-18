@@ -1,5 +1,6 @@
 from flask import render_template, request, redirect, url_for
 from app import app
+from app.forms.basket.basket_add_item_form import BasketAddItemForm
 from app.forms.item.item_form import ItemForm
 from app.services.item_service import ItemService
 
@@ -11,7 +12,9 @@ def getItemList():
 
 @app.route('/items/<int:itemid>')
 def getItemDetails(itemid):
-    return render_template('items/details.html', item=itemService.find_one(itemid))
+    form = BasketAddItemForm()
+
+    return render_template('items/details.html', item=itemService.find_one(itemid), form=form)
 
 @app.route('/items/add', methods=['GET','POST'])
 def addItem():

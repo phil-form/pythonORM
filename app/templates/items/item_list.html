@@ -18,18 +18,87 @@
                     <td> {{ item.itemquantity }}</td>
                     <td>
                         {% if is_basket %}
-                            <form>
-                                <input type="number" value="{{ item.itemquantity }}" required>
-                                <input class="btn btn-primary" type="submit" value="Update">
-                            </form>
+                            <div>
+                                <form id="formItemID{{ item.itemid }}" method="post" action="{{ url_for('add_item_to_basket') }}">
+                                    <input name="itemid" type="number" value="{{ item.itemid }}" hidden>
+                                    <input name="itemquantity" type="number" value="{{ item.itemquantity }}" required>
+                                    <input id="addItem{{ item.itemid }}" class="btn btn-primary" type="submit" value="Update">
+                                    <input id="removeItem{{ item.itemid }}" class="btn btn-danger" type="submit" value="Remove">
+                                </form>
+                            </div>
+                            <script type="module">
+                                import { sendAjax } from '/static/js/ajax-tools.js';
+
+                                document.getElementById('addItem{{ item.itemid }}')
+                                    .addEventListener('click', (e) =>
+                                    {
+                                        e.preventDefault();
+
+                                        const data = new FormData(document.forms['formItemID{{ item.itemid }}']);
+                                        sendAjax("{{ url_for('add_item_to_basket') }}", 'post', data)
+                                            .then((res) =>
+                                            {
+                                                console.log(res)
+                                            });
+
+                                        location.reload();
+                                    });
+
+                                document.getElementById('removeItem{{ item.itemid }}')
+                                    .addEventListener('click', (e) =>
+                                    {
+                                        e.preventDefault();
+
+                                        {#const data = new FormData(document.forms['formItemID{{ item.itemid }}']);#}
+                                        sendAjax("{{ url_for('add_item_to_basket') }}", 'post')
+                                            .then((res) =>
+                                            {
+                                                console.log(res)
+                                            });
+                                        location.reload();
+                                    });
+                            </script>
                         {% else %}
                             <div class="btn-group" role="group">
                                 <a class="btn btn-primary" href="{{ url_for('getItemDetails', itemid=item.itemid) }}">Details</a>
                                 {% if "ADMIN" in session.get('userroles') %}
                                     <a class="btn btn-primary" href="{{ url_for('updateItem', itemid=item.itemid) }}">Edit</a>
                                 {% endif %}
-                                <a class="btn btn-primary" href="{{ url_for('addItemBasket', itemid=item.itemid) }}">Add to basket</a>
+                                <form id="formItemID{{ item.itemid }}" method="post" action="{{ url_for('add_item_to_basket') }}">
+                                    <input name="itemid" type="number" value="{{ item.itemid }}" hidden>
+                                    <input name="itemquantity" type="number" value="{{ item.itemquantity }}" required>
+                                    <input id="submitFormItemID{{ item.itemid }}" class="btn btn-primary" type="submit" value="Update">
+                                </form>
                             </div>
+                            <script type="module">
+                                import { sendAjax } from '/static/js/ajax-tools.js';
+
+                                document.getElementById('submitFormItemID{{ item.itemid }}')
+                                    .addEventListener('click', (e) =>
+                                    {
+                                        e.preventDefault();
+
+                                        const data = new FormData(document.forms['formItemID{{ item.itemid }}']);
+                                        sendAjax("{{ url_for('add_item_to_basket') }}", 'post', data)
+                                            .then((res) =>
+                                            {
+                                                console.log(res)
+                                            });
+                                    });
+
+                                    document.getElementById('isBasketItemID{{ item.itemid }}')
+                                    .addEventListener('click', (e) =>
+                                    {
+                                        e.preventDefault();
+
+                                        const data = new FormData(document.forms['isBasketItemID{{ item.itemid }}']);
+                                        sendAjax("{{ url_for('add_item_to_basket') }}", 'post', data)
+                                            .then((res) =>
+                                            {
+                                                console.log(res)
+                                            });
+                                    });
+                            </script>
                         {% endif %}
                     </td>
                 </tr>
