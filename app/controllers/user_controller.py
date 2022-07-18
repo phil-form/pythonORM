@@ -8,6 +8,7 @@ from flask import redirect, render_template, request, session, url_for
 from app.forms.user.user_register_form import UserRegisterForm
 from app.forms.user.user_login_form import UserLoginForm
 from app.forms.user.user_update_form import UserUpdateForm
+import json
 
 
 # http://localhost:8080/users -> GET

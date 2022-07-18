@@ -1,8 +1,53 @@
 {% extends "layout/layout.html" %}
 {% block body %}
-{% for user in users %}
-    <div>
-        {{ user.username }}
+    <div >
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        id
+                    </th>
+                    <th>
+                        name
+                    </th>
+                    <th>
+                        email
+                    </th>
+                    <th>
+                        descritpion
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="userList">
+
+            </tbody>
+        </table>
     </div>
-{% endfor %}
+    <script>
+        let users = [];
+        {% for user in users %}
+            users.push('{{ user.get_json_parsable() | tojson }}')
+        {% endfor %}
+
+        users.forEach(u => {
+            let user = JSON.parse(u);
+
+            let base = document.createElement('tr');
+            let id = document.createElement('td');
+            let name = document.createElement('td');
+            let email = document.createElement('td');
+            let descritpion = document.createElement('td');
+            id.innerText = user.userid;
+            name.innerText = user.username;
+            email.innerText = user.useremail;
+            descritpion.innerText = user.userdescription;
+            base.appendChild(id);
+            base.appendChild(name);
+            base.appendChild(email);
+            base.appendChild(descritpion);
+
+            document.getElementById('userList').appendChild(base);
+        });
+
+    </script>
 {% endblock %}
