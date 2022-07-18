@@ -7,6 +7,18 @@
     {{ form.csrf_token }}
     <input type="text" name="useremail" placeholder="email" value="{{ '' if user == None else user.useremail }}" required>
     <input type="text" name="userdescription" placeholder="description" value="{{ '' if user == None else user.userdescription }}" required>
+    {% if "ADMIN" in session['userroles'] %}
+        <select name="userroles" id="userroles" multiple>
+            {% for role in roles %}
+                <option value="{{ role.roleid }}"
+                    {% if role.rolename in user.get_roles() %}
+                        selected
+                    {% endif %}>
+                    {{ role.rolename }}
+                </option>
+            {% endfor %}
+        </select>
+    {% endif %}
     <input type="submit" value="Send">
 </form>
 {% endblock %}
