@@ -31,5 +31,5 @@ class UserDTO(AbstractDTO):
 
         return user_dto
 
-    def get_json(self):
+    def get_json_parsable(self):
         pass
