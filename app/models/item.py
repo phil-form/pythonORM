@@ -1,14 +1,6 @@
 from app import db
 from app.models.base_entity import BaseEntity
 
-<<<<<<< HEAD
-class Item(BaseEntity, db.Model):
-    __tablename__ = "items"
-    itemid = db.Column(db.Integer, primary_key=True)
-    itemname = db.Column(db.String(50), unique=True, nullable=False)
-    itemprice = db.Column(db.Integer, nullable=False)
-    baskets = db.relationship('BasketItem')
-=======
 
 class Item(BaseEntity, db.Model):
     __tablename__ = "items"
@@ -16,4 +8,3 @@ class Item(BaseEntity, db.Model):
     itemname = db.Column(db.String(255), nullable=False, index=True, unique=True)
     itemdescription = db.Column(db.Text, nullable=False)
     itemstock = db.Column(db.Integer, nullable=False, default=1)
->>>>>>> main

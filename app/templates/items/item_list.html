@@ -19,14 +19,48 @@
                     <td>
                         {% if is_basket %}
                             <div>
-                                <form method="post" action="{{ url_for('add_item_to_basket') }}">
+                                <form id="formItemID{{ item.itemid }}" method="post" action="{{ url_for('add_item_to_basket') }}">
                                     <input name="itemid" type="number" value="{{ item.itemid }}" hidden>
                                     <input name="itemquantity" type="number" value="{{ item.itemquantity }}" required>
-                                    <input class="btn btn-primary" type="submit" value="Update">
+                                    <input id="submitFormItemID{{ item.itemid }}" class="btn btn-primary" type="submit" value="Update">
                                 </form>
-                                <form method="post" action="{{ url_for('remove_item_to_basket', itemid=item.itemid) }}">
-                                    <input class="btn btn-primary" type="submit" value="Remove">
+                                <script type="module">
+                                    import {sendAjax} from '/static/js/ajax-tools.js';
+
+                                    document.getElementById('submitFormItemID{{ item.itemid }}')
+                                    .addEventListener('click', (e) => 
+                                    {
+                                        e.preventDefault();
+
+                                        const data = new FormData(document.forms['formItemID{{ item.itemid }}']);
+                                        sendAjax("{{ url_for('add_item_to_basket') }}", 'post', data)
+                                            .then((res) => 
+                                            {
+                                                console.log(res);
+                                            });
+                                    });
+                                </script>
+
+                                <form id="formRemoveItemID{{ item.itemid }}" method="post" action="{{ url_for('remove_item_to_basket', itemid=item.itemid) }}">
+                                    <input id="submitFormRemoveItemID{{ item.itemid }}" class="btn btn-primary" type="submit" value="Remove">
                                 </form>
+
+                                <script type="module">
+                                    import {sendAjax} from '/static/js/ajax-tools.js';
+
+                                    document.getElementById('submitFormRemoveItemID{{ item.itemid }}')
+                                    .addEventListener('click', (e) => 
+                                    {
+                                        e.preventDefault();
+
+                                        const data = new FormData(document.forms['formRemoveItemID{{ item.itemid }}']);
+                                        sendAjax("{{url_for('remove_item_to_basket', itemid= item.itemid) }}", 'post', data)
+                                            .then((res) => 
+                                            {
+                                                console.log(res);
+                                            });
+                                    });
+                                </script>
                             </div>
                         {% else %}
                             <div class="btn-group" role="group">
@@ -49,11 +83,7 @@
                                         e.preventDefault();
 
                                         const data = new FormData(document.forms['formItemID{{ item.itemid }}']);
-<<<<<<< HEAD
-                                        sendAjax('{{ url_for('add_item_to_basket') }}', 'post', data)
-=======
                                         sendAjax("{{ url_for('add_item_to_basket') }}", 'post', data)
->>>>>>> d1f6fa0a7fd4d2e738be78520d89c55f99ce8270
                                             .then((res) =>
                                             {
                                                 console.log(res)

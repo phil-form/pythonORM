@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-from app.models.basket import Basket
-from app.dtos.basket_dto import BasketDTO
-
-class BasketMapper:
-    def entity_to_dto(entity: Basket):
-        return BasketDTO.build_from_entity(entity)
-=======
 from app.dtos.basket_dto import BasketDTO
 from app.forms.basket.basket_add_item_form import BasketAddItemForm
 from app.mappers.abstract_mapper import AbstractMapper
@@ -22,4 +14,3 @@ class BasketMapper(AbstractMapper):
         pass
         # if isinstance(form, BasketAddItemForm):
         #
->>>>>>> main

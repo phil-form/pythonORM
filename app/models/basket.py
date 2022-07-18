@@ -1,12 +1,5 @@
 from app import db
 from app.models.base_entity import BaseEntity
-<<<<<<< HEAD
-
-class Basket(db.Model, BaseEntity):
-    __tablename__ = "baskets"
-    basketid = db.Column(db.Integer, primary_key=True)
-    items = db.relationship('BasketItem')
-=======
 from app.models.basket_item import BasketItem
 from app.models.item import Item
 
@@ -47,4 +40,3 @@ class Basket(BaseEntity, db.Model):
         for basket_item in self.items:
             if item.itemid == basket_item.item.itemid:
                 return basket_item
->>>>>>> main

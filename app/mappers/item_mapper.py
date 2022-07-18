@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-from app.models.item import Item
-from app.dtos.item_dto import ItemDTO
-
-class ItemMapper:
-    def entity_to_dto(entity: Item):
-        return ItemDTO.build_from_entity(entity)
-=======
 from app.dtos.item_dto import ItemDTO
 from app.forms.item.item_form import ItemForm
 from app.mappers.abstract_mapper import AbstractMapper
@@ -25,4 +17,3 @@ class ItemMapper(AbstractMapper):
             item.itemstock = form.itemstock.data
 
         return item
->>>>>>> main
