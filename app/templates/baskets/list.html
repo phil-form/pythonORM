@@ -1,0 +1,20 @@
+{% extends "layout/layout.html" %}
+{% block body %}
+{% for basket in baskets %}
+    <div>
+        {{ basket.user.username }}
+        <div>
+            {% for item in basket.items  %}
+                <div>
+                    <span>
+                        {{ item.itemname }}
+                    </span>
+                    <span>
+                        {{ item.itemquantity }}
+                    </span>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endfor %}
+{% endblock %}
