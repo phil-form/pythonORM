@@ -1,5 +1,6 @@
+from copy import deepcopy
+
 from app.dtos.abstract_dto import AbstractDTO
-from app.models.user import User
 from app.dtos.role_dto import RoleDTO
 import json
 
@@ -19,7 +20,7 @@ class UserDTO(AbstractDTO):
         return [role.rolename for role in self.userroles]
 
     @staticmethod
-    def build_from_entity(user: User):
+    def build_from_entity(user):
         user_dto = UserDTO()
 
         user_dto.userid = user.userid
@@ -33,6 +34,13 @@ class UserDTO(AbstractDTO):
         return user_dto
 
     def get_json_parsable(self):
+<<<<<<< HEAD
         rval = {key:val for key, val in self.__dict__.items() if key != 'userroles'}
         rval['userroles'] = [role.get_json_parsable() for role in self.userroles]
         return rval
+=======
+        user_dto = deepcopy(self)
+        user_dto.userroles = [role.get_json_parsable() for role in self.userroles]
+
+        return user_dto.__dict__
+>>>>>>> main

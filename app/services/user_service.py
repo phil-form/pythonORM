@@ -13,6 +13,12 @@ import bcrypt
 
 
 class UserService(BaseService):
+    def __init__(self):
+        print("INIT USER SERVICE")
+
+    def __del__(self):
+        print("DESTROY USER SERVICE")
+
     def find_all(self):
         return [UserMapper.entity_to_dto(user) for user in User.query.filter_by(active=True).all()]
 
