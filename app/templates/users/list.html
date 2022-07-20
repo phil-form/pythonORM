@@ -1,54 +1,73 @@
 {% extends "layout/layout.html" %}
 {% block body %}
-    <div >
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">
-                        id
-                    </th>
-                    <th scope="col">
-                        name
-                    </th>
-                    <th scope="col">
-                        email
-                    </th>
-                    <th scope="col">
-                        descritpion
-                    </th>
-                </tr>
-            </thead>
-            <tbody id="userList">
-
-            </tbody>
-        </table>
+    <div id="userTable">
     </div>
-    <script>
-        let users = [];
-        {% for user in users %}
-            users.push('{{ user.get_json_parsable() | tojson | safe}}')
-        {% endfor %}
+    <form id="addUser" method="post">
+        {{ form.csrf_token }}
+        <input type="text" name="username" placeholder="username" required>
+        <input type="password" name="userpassword" placeholder="password" required>
+        <input type="password" name="confirm" placeholder="confirm" required>
+        <input type="text" name="useremail" placeholder="email" required>
+        <input type="text" name="userdescription" placeholder="description" required>
 
-        users.forEach(u => {
-            let user = JSON.parse(u);
+        <input id="submitUser" type="submit" value="Send">
+    </form>
+    <script type="module">
+        import { TableComponent } from '/static/js/components/table-component.js';
+        import { sendAjax } from '/static/js/ajax-tools.js';
 
-            let base = document.createElement('tr');
-            base.setAttribute('scope', 'row');
-            let id = document.createElement('td');
-            let name = document.createElement('td');
-            let email = document.createElement('td');
-            let descritpion = document.createElement('td');
-            id.innerText = user.userid;
-            name.innerText = user.username;
-            email.innerText = user.useremail;
-            descritpion.innerText = user.userdescription;
-            base.appendChild(id);
-            base.appendChild(name);
-            base.appendChild(email);
-            base.appendChild(descritpion);
+        const userSubmit = document.getElementById('submitUser');
+        userSubmit.addEventListener('click', (event) =>
+        {
+            event.preventDefault();
 
-            document.getElementById('userList').appendChild(base);
-        });
+            const formData = new FormData(document.forms['addUser']);
+
+            sendAjax('/users/register', 'post', formData)
+                .then((res) =>
+                {
+                    refreshUserTable();
+                    document.forms['addUser'].reset();
+                })
+        })
+
+        refreshUserTable();
+
+        function refreshUserTable()
+        {
+            sendAjax('/api/users')
+                .then((res) =>
+                {
+                    const data = JSON.parse(res);
+                    console.log(data);
+
+                    const tableConfig = {
+                        data: data,
+                        columns: [
+                            { columnName: 'Id', value: 'userid' },
+                            { columnName: 'Username', value: 'username' },
+                            { columnName: 'Email', value: 'useremail' },
+                            { columnName: 'Roles', valueCb: (user) => {
+                                let roles = []
+                                for(let role of user.userroles)
+                                {
+                                    roles.push(role.rolename);
+                                }
+                                return roles.join(', ');
+                            }},
+                        ]
+                    }
+
+
+                    let table = new TableComponent(tableConfig);
+                    const userTable = document.getElementById('userTable');
+                    while(userTable.firstChild)
+                    {
+                        userTable.removeChild(userTable.firstChild);
+                    }
+                    userTable.appendChild(table.html);
+                })
+        }
 
     </script>
 {% endblock %}
