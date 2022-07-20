@@ -1,30 +1,50 @@
-from app.decorators.auth_required import auth_required
+from app.framework.decorators.auth_required import auth_required
+from app.framework.decorators.inject import inject
+from app.services.auth_service import AuthService
 from app.services.role_service import RoleService
 from app.services.user_service import UserService
 from app import app
-from flask import redirect, render_template, request, session, url_for
+from flask import redirect, render_template, request, session, url_for, jsonify
 from app.forms.user.user_register_form import UserRegisterForm
 from app.forms.user.user_login_form import UserLoginForm
 from app.forms.user.user_update_form import UserUpdateForm
 
-userService = UserService()
-roleService = RoleService()
 
 # http://localhost:8080/users -> GET
 @app.route('/users')
+<<<<<<< HEAD
 def getUserList():
-    return render_template('users/list.html', users=userService.find_all())
+    users=userService.find_all()
+    usersJSON = []
+    for user in users:
+        usersJSON.append(user.get_json_parsable())
+    return render_template('users/list.html', users=usersJSON)
+=======
+@inject
+def getUserList(userService: UserService):
+    form = UserRegisterForm()
+
+    return render_template('users/list.html', users=userService.find_all(), form=form)
+
+@app.route('/api/users')
+@inject
+def getUsersAsJson(user_service: UserService):
+    return jsonify([user.get_json_parsable() for user in user_service.find_all()])
+>>>>>>> main
 
 # http://localhost:8080/users/5 -> GET
 @app.route('/users/<int:userid>', methods=["GET"])
-def getOneUser(userid: int):
+@auth_required()
+@inject
+def getOneUser(userid: int, userService: UserService):
     user = userService.find_one(userid)
 
     return render_template('users/profile.html', user=user)
 
 # http://localhost:8080/users/register -> GET | POST
 @app.route('/users/register', methods=["GET", "POST"])
-def register():
+@inject
+def register(userService: UserService):
     form = UserRegisterForm(request.form)
 
     if request.method == 'POST':
@@ -38,7 +58,8 @@ def register():
 
 @app.route('/users/update/<int:userid>', methods=["GET", "POST"])
 @auth_required(level="ADMIN", or_is_current_user=True)
-def userUpdate(userid: int):
+@inject
+def userUpdate(userid: int, userService: UserService, roleService: RoleService):
     form = UserUpdateForm(request.form)
     roles = roleService.find_all()
 
@@ -53,7 +74,8 @@ def userUpdate(userid: int):
 
 
 @app.route('/login', methods=["GET", "POST"])
-def login():
+@inject
+def login(userService: UserService):
     form = UserLoginForm(request.form)
 
     if request.method == 'POST':
@@ -75,6 +97,7 @@ def login():
 
 
 @app.route('/logout', methods=["GET"])
+@inject
 def logout():
     session.pop('userid', None)
     session.pop('username', None)
@@ -84,8 +107,9 @@ def logout():
 
 @app.route('/profile', methods=["GET"])
 @auth_required()
-def profile():
-    userid = session.get('userid')
+@inject
+def profile(authService: AuthService):
+    userid = authService.get_current_user().userid
 
     return redirect(url_for('getOneUser', userid=userid))
 
