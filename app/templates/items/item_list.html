@@ -22,32 +22,8 @@
                                 <form id="formItemID{{ item.itemid }}" method="post" action="{{ url_for('add_item_to_basket') }}">
                                     <input name="itemid" type="number" value="{{ item.itemid }}" hidden>
                                     <input name="itemquantity" type="number" value="{{ item.itemquantity }}" required>
-<<<<<<< HEAD
-                                    <input id="submitFormItemID{{ item.itemid }}" class="btn btn-primary" type="submit" value="Update">
-                                </form>
-                                <script type="module">
-                                    import {sendAjax} from '/static/js/ajax-tools.js';
-
-                                    document.getElementById('submitFormItemID{{ item.itemid }}')
-                                    .addEventListener('click', (e) => 
-                                    {
-                                        e.preventDefault();
-
-                                        const data = new FormData(document.forms['formItemID{{ item.itemid }}']);
-                                        sendAjax("{{ url_for('add_item_to_basket') }}", 'post', data)
-                                            .then((res) => 
-                                            {
-                                                console.log(res);
-                                            });
-                                    });
-                                </script>
-
-                                <form id="formRemoveItemID{{ item.itemid }}" method="post" action="{{ url_for('remove_item_to_basket', itemid=item.itemid) }}">
-                                    <input id="submitFormRemoveItemID{{ item.itemid }}" class="btn btn-primary" type="submit" value="Remove">
-=======
                                     <input id="addItem{{ item.itemid }}" class="btn btn-primary" type="submit" value="Update">
                                     <input id="removeItem{{ item.itemid }}" class="btn btn-danger" type="submit" value="Remove">
->>>>>>> main
                                 </form>
 
                                 <script type="module">

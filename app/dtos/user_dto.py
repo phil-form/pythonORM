@@ -34,13 +34,7 @@ class UserDTO(AbstractDTO):
         return user_dto
 
     def get_json_parsable(self):
-<<<<<<< HEAD
-        rval = {key:val for key, val in self.__dict__.items() if key != 'userroles'}
-        rval['userroles'] = [role.get_json_parsable() for role in self.userroles]
-        return rval
-=======
         user_dto = deepcopy(self)
         user_dto.userroles = [role.get_json_parsable() for role in self.userroles]
 
         return user_dto.__dict__
->>>>>>> main

@@ -1,40 +1,5 @@
 {% extends "layout/layout.html" %}
 {% block body %}
-<<<<<<< HEAD
-<table>
-    <tr>
-        <th>#</th>
-        <th>username</th>
-        <th>usermail</th>
-        <th>userdescription</th>
-        <th>userroles</th>
-    </tr>
-    {% for user in users %}
-    <tr>
-        <td>{{ user.userid}}</td>
-        <td>{{ user.username}}</td>
-        <td>{{ user.usermail}}</td>
-        <td>{{ user.userdescription}}</td>
-        <td>
-            {% for role in user.userroles %}
-                {{role.rolename}}
-            {% endfor %}
-        </td>
-    </tr>
-{% endfor %}
-</table>
-<style>
-table {
-    border-spacing: 0 15px;
-}   
-td {
-    width: 150px;
-    border: 1px solid black;
-    padding: 5px
-}
-</style>
-
-=======
     <div id="userTable">
     </div>
     <form id="addUser" method="post">
@@ -105,5 +70,4 @@ td {
         }
 
     </script>
->>>>>>> main
 {% endblock %}

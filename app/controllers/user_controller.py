@@ -12,14 +12,6 @@ from app.forms.user.user_update_form import UserUpdateForm
 
 # http://localhost:8080/users -> GET
 @app.route('/users')
-<<<<<<< HEAD
-def getUserList():
-    users=userService.find_all()
-    usersJSON = []
-    for user in users:
-        usersJSON.append(user.get_json_parsable())
-    return render_template('users/list.html', users=usersJSON)
-=======
 @inject
 def getUserList(userService: UserService):
     form = UserRegisterForm()
@@ -30,7 +22,6 @@ def getUserList(userService: UserService):
 @inject
 def getUsersAsJson(user_service: UserService):
     return jsonify([user.get_json_parsable() for user in user_service.find_all()])
->>>>>>> main
 
 # http://localhost:8080/users/5 -> GET
 @app.route('/users/<int:userid>', methods=["GET"])

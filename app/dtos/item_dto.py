@@ -29,8 +29,4 @@ class ItemDTO(AbstractDTO):
 
 
     def get_json_parsable(self):
-<<<<<<< HEAD
-        pass
-=======
         return self.__dict__
->>>>>>> main

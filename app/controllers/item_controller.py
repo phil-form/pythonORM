@@ -1,8 +1,9 @@
-from flask import render_template, request, redirect, url_for
+from flask import jsonify, render_template, request, redirect, url_for
 
 from app import app
 from app.forms.basket.basket_add_item_form import BasketAddItemForm
 from app.forms.item.item_form import ItemForm
+from app.framework.decorators.inject import inject
 from app.services.item_service import ItemService
 
 itemService = ItemService()
@@ -55,3 +56,8 @@ def updateItem(itemid: int):
     form.itemstock.data = item.itemquantity
 
     return render_template('items/add_or_update.html', form=form)
+
+@app.route('/api/items')
+@inject
+def api_items(itemService: ItemService):
+    return jsonify([item.get_json_parsable() for item in itemService.find_all()])
