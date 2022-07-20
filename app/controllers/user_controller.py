@@ -4,7 +4,7 @@ from app.services.auth_service import AuthService
 from app.services.role_service import RoleService
 from app.services.user_service import UserService
 from app import app
-from flask import redirect, render_template, request, session, url_for
+from flask import redirect, render_template, request, session, url_for, jsonify
 from app.forms.user.user_register_form import UserRegisterForm
 from app.forms.user.user_login_form import UserLoginForm
 from app.forms.user.user_update_form import UserUpdateForm
@@ -14,7 +14,14 @@ from app.forms.user.user_update_form import UserUpdateForm
 @app.route('/users')
 @inject
 def getUserList(userService: UserService):
-    return render_template('users/list.html', users=userService.find_all())
+    form = UserRegisterForm()
+
+    return render_template('users/list.html', users=userService.find_all(), form=form)
+
+@app.route('/api/users')
+@inject
+def getUsersAsJson(user_service: UserService):
+    return jsonify([user.get_json_parsable() for user in user_service.find_all()])
 
 # http://localhost:8080/users/5 -> GET
 @app.route('/users/<int:userid>', methods=["GET"])
