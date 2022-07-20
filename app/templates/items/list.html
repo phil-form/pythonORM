@@ -1,7 +1,69 @@
 {% extends "layout/layout.html" %}
 {% block body %}
-    {% include 'items/item_list.html' %}
-    {% if "ADMIN" in session.get('userroles') %}
-        <a class="btn btn-primary" href="{{ url_for('addItem') }}">Add item</a>
-    {% endif %}
+<div id="itemTable">
+</div>
+{% if "ADMIN" in session.get('userroles') %}
+<form id="addItem" method="post">
+    {{ form.csrf_token }}
+    <input type="text" name="itemname" placeholder="itemname" required>
+    <input type="text" name="itemdescription" placeholder="itemdescription" required>
+    <input type="number" name="itemstock" placeholder="itemstock" required>
+
+    <input id="submitItem" type="submit" value="Send">
+</form>
+{% endif %}
+
+<script type="module">
+    import { TableComponent } from '/static/js/components/table-component.js';
+    import { sendAjax } from '/static/js/ajax-tools.js';
+    
+    const itemSubmit = document.getElementById('submitItem');
+    itemSubmit.addEventListener('click', (event) =>
+    {
+        event.preventDefault();
+
+        const formData = new FormData(document.forms['addItem']);
+
+        sendAjax('/items/add', 'post', formData)
+            .then((res) =>
+            {
+                refreshItemTable();
+                document.forms['addItem'].reset();
+            })
+    })
+
+    refreshItemTable();
+    
+    function refreshItemTable()
+    {
+        sendAjax('/api/items')
+        .then((res) =>
+        {
+            const data = JSON.parse(res);
+            console.log(data);
+            
+            const tableConfig = {
+                data: data,
+                columns: [
+                { columnName: 'Id', value: 'itemid' },
+                { columnName: 'Name', value: 'itemname' },
+                { columnName: 'Description', value: 'itemdescription' },
+                { columnName: 'Stock', value: 'itemquantity' },
+                ]
+            }
+            
+            
+            let table = new TableComponent(tableConfig);
+            const itemTable = document.getElementById('itemTable');
+            while(itemTable.firstChild)
+            {
+                itemTable.removeChild(itemTable.firstChild);
+            }
+            itemTable.appendChild(table.html);
+        })
+    }
+    
+    
+    
+</script>
 {% endblock %}

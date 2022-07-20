@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 from app.dtos.abstract_dto import AbstractDTO
 from app.dtos.role_dto import RoleDTO
 
@@ -31,4 +33,7 @@ class UserDTO(AbstractDTO):
         return user_dto
 
     def get_json_parsable(self):
-        pass
+        user_dto = deepcopy(self)
+        user_dto.userroles = [role.get_json_parsable() for role in self.userroles]
+
+        return user_dto.__dict__
