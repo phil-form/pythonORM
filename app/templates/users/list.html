@@ -1,14 +1,73 @@
 {% extends "layout/layout.html" %}
 {% block body %}
-<div id="userContainer"></div>
-<script>
-    const container = document.getElementById('userContainer');
-    {% for user in users %}
-        let div{{user.userid}} = document.createElement('div');
-        div{{user.userid}}.innerText = "{{ user.username}}";
-        container.appendChild(div{{user.userid}});
-    {% endfor %}
+    <div id="userTable">
+    </div>
+    <form id="addUser" method="post">
+        {{ form.csrf_token }}
+        <input type="text" name="username" placeholder="username" required>
+        <input type="password" name="userpassword" placeholder="password" required>
+        <input type="password" name="confirm" placeholder="confirm" required>
+        <input type="text" name="useremail" placeholder="email" required>
+        <input type="text" name="userdescription" placeholder="description" required>
 
-</script>
+        <input id="submitUser" type="submit" value="Send">
+    </form>
+    <script type="module">
+        import { TableComponent } from '/static/js/components/table-component.js';
+        import { sendAjax } from '/static/js/ajax-tools.js';
 
+        const userSubmit = document.getElementById('submitUser');
+        userSubmit.addEventListener('click', (event) =>
+        {
+            event.preventDefault();
+
+            const formData = new FormData(document.forms['addUser']);
+
+            sendAjax('/users/register', 'post', formData)
+                .then((res) =>
+                {
+                    refreshUserTable();
+                    document.forms['addUser'].reset();
+                })
+        })
+
+        refreshUserTable();
+
+        function refreshUserTable()
+        {
+            sendAjax('/api/users')
+                .then((res) =>
+                {
+                    const data = JSON.parse(res);
+                    console.log(data);
+
+                    const tableConfig = {
+                        data: data,
+                        columns: [
+                            { columnName: 'Id', value: 'userid' },
+                            { columnName: 'Username', value: 'username' },
+                            { columnName: 'Email', value: 'useremail' },
+                            { columnName: 'Roles', valueCb: (user) => {
+                                let roles = []
+                                for(let role of user.userroles)
+                                {
+                                    roles.push(role.rolename);
+                                }
+                                return roles.join(', ');
+                            }},
+                        ]
+                    }
+
+
+                    let table = new TableComponent(tableConfig);
+                    const userTable = document.getElementById('userTable');
+                    while(userTable.firstChild)
+                    {
+                        userTable.removeChild(userTable.firstChild);
+                    }
+                    userTable.appendChild(table.html);
+                })
+        }
+
+    </script>
 {% endblock %}
