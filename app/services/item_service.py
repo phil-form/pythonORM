@@ -22,7 +22,8 @@ class ItemService(BaseService):
         try:
             db.session.add(item)
             db.session.commit()
-        except:
+        except Exception as e:
+            print(e)
             db.session.rollback()
 
         return self.find_one(item.itemid)
@@ -36,7 +37,8 @@ class ItemService(BaseService):
         ItemMapper.form_to_entity(data, item)
         try:
             db.session.commit()
-        except:
+        except Exception as e:
+            print(e)
             db.session.rollback()
 
         return self.find_one(entity_id)
@@ -50,7 +52,8 @@ class ItemService(BaseService):
         try:
             db.session.delete(item)
             db.session.commit()
-        except:
+        except Exception as e:
+            print(e)
             db.session.rollback()
 
         return item.itemid
