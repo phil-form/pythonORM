@@ -1,4 +1,4 @@
-from flask import render_template, session, request, redirect, url_for
+from flask import render_template, session, request, redirect, url_for, jsonify
 
 from app import app
 from app.framework.decorators.auth_required import auth_required
@@ -35,7 +35,7 @@ def getBasketDetail(basketService: BasketService):
 @inject
 def getBasketDetailAsJson(basketService: BasketService):
     basket = basketService.find_one_by(userid=session.get('userid'), basketclosed=False)
-    return jsonify([basket.get_json_parsable() for basket in basketService.find_one_by(userid=session.get('userid'), basketclosed=False)])
+    return jsonify(basket.get_json_parsable())
 
 @app.route('/basket/add', methods=['POST'])
 @auth_required()
