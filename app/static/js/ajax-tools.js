@@ -1,3 +1,7 @@
+export let ajaxConfig = {
+    headers: []
+};
+
 export function sendAjax(url, method='get', data = null)
 {
     return new Promise((resolve, reject) =>
@@ -21,6 +25,19 @@ export function sendAjax(url, method='get', data = null)
         });
 
         request.open(method, url, true);
+
+        if(ajaxConfig.headers.length > 0)
+        {
+            for(let header of ajaxConfig.headers)
+            {
+                const methods = ajaxConfig.headers.methods;
+                if(methods.includes(method) || methods.includes('ALL'))
+                {
+                    request.setRequestHeader(header.key, header.value);
+                }
+            }
+        }
+
         request.send(data);
     })
 }
