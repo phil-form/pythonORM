@@ -3,7 +3,8 @@ export class TableComponent
     constructor(tableConfig) {
         this.html = document.createElement('table');
         this.form = [];
-
+        this.tableConfig = tableConfig;
+        this.data = [];
         this.initTable(tableConfig);
     }
 
@@ -17,7 +18,6 @@ export class TableComponent
 
         let thead_tr = document.createElement('tr');
 
-        let tr = document.createElement('tr');
         for(const col of tableConfig.columns) {
             const th = document.createElement('th');
             th.scope = 'col';
@@ -25,19 +25,33 @@ export class TableComponent
             thead_tr.appendChild(th);
         }
         this.thead.appendChild(thead_tr);
-
-        for(const row  of tableConfig.data)
-        {
-            let tr = document.createElement('tr');
-
-            this.processRowData(row, tableConfig, tr);
-            // this.processAction(row, tableConfig, tr);
-
-            this.tbody.appendChild(tr);
-        }
-
         this.html.appendChild(this.thead);
         this.html.appendChild(this.tbody);
+
+        if(tableConfig.findDataCb)
+        {
+            this.refreshData();
+        } else if(tableConfig.data)
+        {
+            this.data = tableConfig.data;
+            this.processData();
+        }
+    }
+
+    processData()
+    {
+        if(this.data.length > 0)
+        {
+            for(const row  of this.data)
+            {
+                let tr = document.createElement('tr');
+
+                this.processRowData(row, this.tableConfig, tr);
+
+                this.tbody.appendChild(tr);
+            }
+
+        }
     }
 
     processRowData(row, tableConfig, tr)
@@ -142,12 +156,39 @@ export class TableComponent
         if(value.indexOf('.') !== -1)
         {
             let objMemberName = value.split('.');
-            for(const val of objMemberName)
+            const len = objMemberName.length;
+            for(let i = 0; i < len; i++)
             {
-                row = this.processRow(row, val);
+                row = this.processRow(row, objMemberName[i]);
             }
-            return row;
+            return row[objMemberName[i]];
         }
         return row[value];
+    }
+
+    refreshData()
+    {
+        this.tableConfig.findDataCb().then((data) =>
+            {
+                while(this.tbody.firstChild)
+                {
+                    this.tbody.removeChild(this.tbody.firstChild);
+                }
+                this.data = JSON.parse(data);
+
+                if(this.tableConfig.sortData)
+                {
+                    const sortData = this.tableConfig.sortData;
+                    this.data.sort((a, b) =>
+                    {
+                        if(sortData.direction === 'ASC')
+                        {
+                            return a[sortData.sortColumnName] - b[sortData.sortColumnName];
+                        }
+                        return b[sortData.sortColumnName] - a[sortData.sortColumnName];
+                    })
+                }
+                this.processData();
+            })
     }
 }
