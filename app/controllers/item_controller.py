@@ -1,4 +1,4 @@
-from flask import jsonify, render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, jsonify
 
 from app import app
 from app.forms.basket.basket_add_item_form import BasketAddItemForm
@@ -10,7 +10,13 @@ itemService = ItemService()
 
 @app.route('/items')
 def getItemList():
-    return render_template('items/list.html', items=itemService.find_all())
+    form = ItemForm();
+    return render_template('items/list.html', items=itemService.find_all(), form=form)
+
+@app.route('/api/items')
+@inject
+def getItemListAsJson(itemService: ItemService):
+    return jsonify([item.get_json_parsable() for item in itemService.find_all()])
 
 @app.route('/items/<int:itemid>')
 def getItemDetails(itemid):
