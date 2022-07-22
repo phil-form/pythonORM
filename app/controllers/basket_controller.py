@@ -30,12 +30,13 @@ def getBasketDetail(basketService: BasketService):
     return render_template('baskets/details.html',
                            basket=basket, items=basket.items, is_basket=True)
 
-@app.route('/api/basket')
+@app.route('/api/basket/items')
 @auth_required()
 @inject
-def getBasketDetailAsJson(basketService: BasketService):
+def getBasketDetailJson(basketService: BasketService):
     basket = basketService.find_one_by(userid=session.get('userid'), basketclosed=False)
-    return jsonify(basket.get_json_parsable())
+
+    return jsonify([item.get_json_parsable() for item in basket.items])
 
 @app.route('/basket/add', methods=['POST'])
 @auth_required()
@@ -44,18 +45,18 @@ def add_item_to_basket():
 
     basketService.add_item(item_to_add)
 
-    return redirect(url_for('getBasketDetail'))
+    return '/basket/add response'
 
 @app.route('/basket/remove/<int:itemid>', methods=['POST'])
 @auth_required()
 def remove_item_to_basket(itemid: int):
     basketService.remove_item(itemid)
 
-    return redirect(url_for('getBasketDetail'))
+    return '/basket/remove response'
 
 @app.route('/basket/checkout', methods=['POST'])
 @auth_required()
 def checkout_basket():
     basketService.checkout_basket()
 
-    return redirect(url_for('getBasketDetail'))
+    return '/basket/checkout response'

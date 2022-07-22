@@ -3,49 +3,80 @@
 
 {{ basket.user.username }}
 <div>
-    <div id="basketItemsList"></div>
-{#    href="{{ url_for('checkout_basket') }}"#}
-    <a id="btnCheckout" class="btn btn-primary" >Checkout</a>
+    <div id="itemList"></div>
+
+    <a href="/basket/checkout" id="btnCheckout" class="btn btn-primary" >Checkout</a>
 </div>
 <script type="module">
     import { TableComponent } from '/static/js/components/table-component.js';
     import { sendAjax } from '/static/js/ajax-tools.js';
 
-    refreshBasketItemsTable();
+    const tableConfig = {
+        findDataCb: () => {
+            return sendAjax('/api/basket/items')
+        },
+        sortData: {
+            sortColumnName: 'itemid',
+            direction: 'ASC'
+        },
+        columns: [
+            { columnName: 'Id', value: 'itemid' },
+            { columnName: 'Name', value: 'itemname' },
+            { columnName: 'Description', value: 'itemdescription' },
+            { columnName: 'Quantity', type: 'FORM', fieldName: 'itemquantity' },
+            { columnName: 'Actions', type: 'ACTIONS' },
+        ],
+        actions: [
+            { actionName: 'Update', actionCb: (data) =>
+                {
+                    sendAjax('/basket/add', 'post', data)
+                        .then((res) =>
+                        {
+                            console.log(res);
+                            table.refreshData();
+                        });
+                },
+                buttonType: 3,
+            },
+            { actionName: 'Remove', actionCb: (data) =>
+                {
+                    sendAjax(`/basket/remove/${data.itemid}`, 'post')
+                        .then((res) =>
+                        {
+                            console.log(res)
+                            table.refreshData();
+                        }
+                    );
+                },
+                buttonType: 2
+            },
+        ],
+        form: {
+            formName: 'itemForm',
+            formIdValue: 'itemid',
+            formFields: [
+                { fieldName: 'itemid', value: 'itemid', type: 'hidden' },
+                { fieldName: 'itemquantity', value: 'itemquantity', type: 'number' }
+            ]
+        }
+    };
 
-    function refreshBasketItemsTable() {
-        sendAjax('/api/basket')
-            .then((res)  => {
-                const data = JSON.parse(res);
-
-                const tableConfig = {
-                    data: data.items,
-                    columns: [
-                        { columnName: 'Id', value: 'itemid' },
-                        { columnName: 'Name', value: 'itemname' },
-                        { columnName: 'Description', value: 'itemdescription'}
-                    ]
-                }
-       
-                const table = new TableComponent(tableConfig);
-                const itemTable = document.getElementById('basketItemsList');
-                while (itemTable.firstChild) {
-                    itemTable.removeChild(itemTable.firstChild);
-                }
-                itemTable.appendChild(table.html);
-        })
-    }   
+    const table = new TableComponent(tableConfig);
+    const itemTable = document.getElementById('itemList');
+    itemTable.appendChild(table.html);
 
     const checkoutBtn = document.getElementById('btnCheckout')
 
     checkoutBtn.addEventListener('click', (event) =>
     {
-        sendAjax("{{ url_for('checkout_basket') }}", 'post')
-            .then((data) =>
-            {
-                console.log(data);
-                location.reload();
-            });
+        event.preventDefault();
+        console.log(checkoutBtn.href);
+        {#sendAjax('{{ url_for('checkout_basket') }}', 'post')#}
+        {#    .then((data) =>#}
+        {#    {#}
+        {#        console.log(data);#}
+        {#        table.refreshData();#}
+        {#    });#}
     })
 </script>
 {% endblock %}
