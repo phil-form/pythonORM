@@ -3,6 +3,7 @@ from flask import render_template, session, request, redirect, url_for
 from app import app
 from app.framework.decorators.auth_required import auth_required
 from app.forms.basket.basket_add_item_form import BasketAddItemForm
+from app.framework.decorators.inject import inject
 from app.services.basket_service import BasketService
 from app.framework.decorators.inject import inject
 
