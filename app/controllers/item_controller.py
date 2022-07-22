@@ -1,9 +1,4 @@
 from flask import render_template, request, redirect, url_for, jsonify
-<<<<<<< HEAD
-from app.framework.decorators.inject import inject
-=======
-
->>>>>>> ba4c094cc8ebdde3a1fada1b67d21c58f15f8067
 from app import app
 from app.forms.basket.basket_add_item_form import BasketAddItemForm
 from app.forms.item.item_form import ItemForm
@@ -11,7 +6,6 @@ from app.framework.decorators.inject import inject
 from app.services.item_service import ItemService
 
 @app.route('/items')
-<<<<<<< HEAD
 @inject
 def getItemList(item_service: ItemService):
     form = ItemForm()
@@ -21,16 +15,6 @@ def getItemList(item_service: ItemService):
 @inject
 def getItemsAsJson(item_service: ItemService):
     return jsonify([item.get_json_parsable() for item in item_service.find_all()])
-=======
-def getItemList():
-    form = ItemForm();
-    return render_template('items/list.html', items=itemService.find_all(), form=form)
-
-@app.route('/api/items')
-@inject
-def getItemListAsJson(itemService: ItemService):
-    return jsonify([item.get_json_parsable() for item in itemService.find_all()])
->>>>>>> ba4c094cc8ebdde3a1fada1b67d21c58f15f8067
 
 @app.route('/items/<int:itemid>')
 @inject
