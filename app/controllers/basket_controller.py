@@ -17,6 +17,11 @@ userService = UserService()
 def getAllBaskets():
     return render_template('baskets/list.html', baskets=basketService.find_all())
 
+@app.route('/api/baskets')
+@inject
+def getBasketsAsJson(basketService: BasketService):
+    return jsonify([basket.get_json_parsable() for basket in basketService.find_all()])
+
 @app.route('/basket')
 @auth_required()
 @inject
@@ -24,6 +29,13 @@ def getBasketDetail(basketService: BasketService):
     basket = basketService.find_one_by(userid=session.get('userid'), basketclosed=False)
     return render_template('baskets/details.html',
                            basket=basket, items=basket.items, is_basket=True)
+
+@app.route('/api/basket')
+@auth_required()
+@inject
+def getBasketDetailAsJson(basketService: BasketService):
+    basket = basketService.find_one_by(userid=session.get('userid'), basketclosed=False)
+    return jsonify([basket.get_json_parsable() for basket in basketService.find_one_by(userid=session.get('userid'), basketclosed=False)])
 
 @app.route('/basket/add', methods=['POST'])
 @auth_required()
