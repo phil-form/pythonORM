@@ -50,7 +50,7 @@
                                         e.preventDefault();
 
                                         {#const data = new FormData(document.forms['formItemID{{ item.itemid }}']);#}
-                                        sendAjax("{{ url_for('add_item_to_basket') }}", 'post')
+                                        sendAjax("{{ url_for('remove_item_to_basket', itemid=item.itemid) }}", 'post')
                                             .then((res) =>
                                             {
                                                 console.log(res)
