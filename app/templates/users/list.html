@@ -28,7 +28,7 @@
                 {
                     refreshUserTable();
                     document.forms['addUser'].reset();
-                })
+                });
         })
 
         refreshUserTable();
@@ -39,6 +39,7 @@
                 .then((res) =>
                 {
                     const data = JSON.parse(res);
+                    console.log(res);
                     console.log(data);
 
                     const tableConfig = {
@@ -54,10 +55,9 @@
                                     roles.push(role.rolename);
                                 }
                                 return roles.join(', ');
-                            }},
+                            } },
                         ]
                     }
-
 
                     let table = new TableComponent(tableConfig);
                     const userTable = document.getElementById('userTable');
@@ -66,6 +66,9 @@
                         userTable.removeChild(userTable.firstChild);
                     }
                     userTable.appendChild(table.html);
+                }, (err) =>
+                {
+                    console.log(err)
                 })
         }
 

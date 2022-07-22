@@ -1,6 +1,6 @@
 from enum import Enum
 
-from flask import Flask
+from flask import Flask, session, request
 
 
 class Scope(Enum):
@@ -39,13 +39,21 @@ class Injector:
         app.before_request(self.__request_start)
         app.after_request(self.__request_end)
 
+    def __get_session_id(self):
+        for cookie, value in request.cookies.items():
+            if cookie == 'session':
+                return value
+
     def __request_start(self, *args, **kwargs):
         # print("START SCOPED")
-        self.__scoped = {}
+        # print(session.get('csrf_token'))
+        sessionid = self.__get_session_id()
+        self.__scoped[sessionid] = {}
 
     def __request_end(self, response):
         # print("SCOPE END")
-        self.__scoped = {}
+        sessionid = self.__get_session_id()
+        self.__scoped[sessionid] = {}
         return response
 
     def __del__(self):
@@ -71,10 +79,11 @@ class Injector:
         return self.__singleton[dependency.base.__name__]
 
     def __get_scoped(self, dependency: DependencyConfig):
-        if self.__scoped.get(dependency.base.__name__) is None:
-            self.__scoped[dependency.base.__name__] = dependency.implement()
+        sessionid = self.__get_session_id()
+        if self.__scoped.get(sessionid).get(dependency.base.__name__) is None:
+            self.__scoped.get(sessionid)[dependency.base.__name__] = dependency.implement()
 
-        return self.__scoped[dependency.base.__name__]
+        return self.__scoped.get(sessionid)[dependency.base.__name__]
 
     def __get_transient(self, dependency: DependencyConfig):
         return dependency.implement()
