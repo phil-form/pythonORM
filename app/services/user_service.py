@@ -42,7 +42,8 @@ class UserService(BaseService):
         try:
             db.session.add(user)
             db.session.commit()
-        except:
+        except Exception as e:
+            print(e)
             db.session.rollback()
 
         return self.find_one(user.userid)
@@ -62,7 +63,8 @@ class UserService(BaseService):
 
         try:
             db.session.commit()
-        except:
+        except Exception as e:
+            print(e)
             db.session.rollback()
             return None
 

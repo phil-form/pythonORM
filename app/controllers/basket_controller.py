@@ -1,8 +1,9 @@
-from flask import render_template, session, request, redirect, url_for
+from flask import render_template, session, request, redirect, url_for, jsonify
 
 from app import app
 from app.framework.decorators.auth_required import auth_required
 from app.forms.basket.basket_add_item_form import BasketAddItemForm
+from app.framework.decorators.inject import inject
 from app.services.basket_service import BasketService
 from app.services.item_service import ItemService
 from app.services.user_service import UserService
@@ -16,12 +17,25 @@ userService = UserService()
 def getAllBaskets():
     return render_template('baskets/list.html', baskets=basketService.find_all())
 
+@app.route('/api/baskets')
+@inject
+def getBasketsAsJson(basketService: BasketService):
+    return jsonify([basket.get_json_parsable() for basket in basketService.find_all()])
+
 @app.route('/basket')
 @auth_required()
+@inject
 def getBasketDetail(basketService: BasketService):
     basket = basketService.find_one_by(userid=session.get('userid'), basketclosed=False)
     return render_template('baskets/details.html',
                            basket=basket, items=basket.items, is_basket=True)
+
+@app.route('/api/basket')
+@auth_required()
+@inject
+def getBasketDetailAsJson(basketService: BasketService):
+    basket = basketService.find_one_by(userid=session.get('userid'), basketclosed=False)
+    return jsonify(basket.get_json_parsable())
 
 @app.route('/basket/add', methods=['POST'])
 @auth_required()
