@@ -1,7 +1,4 @@
 {% extends "layout/layout.html" %}
 {% block body %}
     {% include 'items/item_list.html' %}
-    {% if "ADMIN" in session.get('userroles') %}
-        <a class="btn btn-primary" href="{{ url_for('addItem') }}">Add item</a>
-    {% endif %}
 {% endblock %}
