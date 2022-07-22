@@ -30,7 +30,11 @@ export function sendAjax(url, method='get', data = null)
         {
             for(let header of ajaxConfig.headers)
             {
+<<<<<<< HEAD
+                const methods = ajaxConfig.headers.methods;
+=======
                 const methods = header.methods;
+>>>>>>> 11ade11afa9f83ba721f142f68f06316dcb913f5
                 if(methods.includes(method) || methods.includes('ALL'))
                 {
                     request.setRequestHeader(header.key, header.value);

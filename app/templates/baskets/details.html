@@ -69,6 +69,14 @@
 
     checkoutBtn.addEventListener('click', (event) =>
     {
+<<<<<<< HEAD
+        sendAjax('{{ url_for("checkout_basket") }}', 'post')
+            .then((data) =>
+            {
+                console.log(data);
+                location.reload();
+            });
+=======
         event.preventDefault();
         console.log(checkoutBtn.href);
         {#sendAjax('{{ url_for('checkout_basket') }}', 'post')#}
@@ -77,6 +85,7 @@
         {#        console.log(data);#}
         {#        table.refreshData();#}
         {#    });#}
+>>>>>>> 73e90b44792b0dea2817c6cf2ae3e2df6248a41c
     })
 </script>
 {% endblock %}

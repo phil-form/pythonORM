@@ -13,20 +13,26 @@ import bcrypt
 
 
 class UserService(BaseService):
-    def __init__(self):
-        print("INIT USER SERVICE")
-
-    def __del__(self):
-        print("DESTROY USER SERVICE")
-
     def find_all(self):
-        return [UserMapper.entity_to_dto(user) for user in User.query.filter_by(active=True).all()]
+        try:
+            return [UserMapper.entity_to_dto(user) for user in User.query.filter_by(active=True).all()]
+        except Exception as e:
+            print(e)
+            return []
 
     def find_one(self, entity_id: int):
-        return UserMapper.entity_to_dto(User.query.filter_by(userid=entity_id).first())
+        try:
+            return UserMapper.entity_to_dto(User.query.filter_by(userid=entity_id).first())
+        except Exception as e:
+            print(e)
+            return []
 
     def find_one_by(self, **kwargs) -> User:
-        return User.query.filter_by(**kwargs).first()
+        try:
+            return User.query.filter_by(**kwargs).first()
+        except Exception as e:
+            print(e)
+            return []
 
     def insert(self, form: UserRegisterForm):
         user = User()
@@ -36,10 +42,10 @@ class UserService(BaseService):
         user.userpassword = bcrypt.hashpw(password, salt).decode('utf-8')
         user.baskets.append(Basket())
 
-        role_user = Role.query.filter_by(rolename="USER").one()
-        user.add_role(role_user)
-
         try:
+            role_user = Role.query.filter_by(rolename="USER").one()
+            user.add_role(role_user)
+
             db.session.add(user)
             db.session.commit()
         except Exception as e:
@@ -71,13 +77,18 @@ class UserService(BaseService):
         return UserMapper.entity_to_dto(user)
 
     def delete(self, entity_id: int):
-        user = User.query.filter_by(userid=entity_id).first()
+        try:
+            user = User.query.filter_by(userid=entity_id).first()
 
-        if user is not None:
-            db.session.delete(user)
-            db.session.commit()
+            if user is not None:
+                db.session.delete(user)
+                db.session.commit()
 
-        return user.userid
+            return user.userid
+        except Exception as e:
+            print(e)
+            return []
+
 
     def login(self, form: UserLoginForm):
         user = User()

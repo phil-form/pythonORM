@@ -34,23 +34,21 @@
                             </a>
                         </li>
                         {% if session.get('userid') %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('getItemList') }}">
-                                    Shop
-                                </a>
-                            </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('getItemList') }}">
+                                Shop
+                            </a>
+                        </li>
                         {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('addItem') }}">add</a>
+                        </li>
                     </ul>
                 </div>
             </div>
             <div class="container-fluid justify-content-end">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     {% if session.get('userid') %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('getBasketDetail') }}">
-                                Basket
-                            </a>
-                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('profile') }}">
                                 Profile

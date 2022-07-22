@@ -2,6 +2,7 @@ from copy import deepcopy
 
 from app.dtos.abstract_dto import AbstractDTO
 from app.dtos.role_dto import RoleDTO
+import json
 
 
 class UserDTO(AbstractDTO):
