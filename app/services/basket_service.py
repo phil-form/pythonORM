@@ -27,7 +27,8 @@ class BasketService(BaseService):
         try:
             db.session.add(basket)
             db.session.commit()
-        except:
+        except Exception as e:
+            print(e)
             db.session.rollback()
 
         return self.find_one(basket.basketid)
@@ -40,7 +41,8 @@ class BasketService(BaseService):
         BasketMapper.form_to_entity(data, basket)
         try:
             db.session.commit()
-        except:
+        except Exception as e:
+            print(e)
             db.session.rollback()
 
         return self.find_one(entity_id)
@@ -53,7 +55,8 @@ class BasketService(BaseService):
         try:
             db.session.delete(basket)
             db.session.commit()
-        except:
+        except Exception as e:
+            print(e)
             db.session.rollback()
 
         return basket.basketid
