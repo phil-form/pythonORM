@@ -1,4 +1,114 @@
 {% extends "layout/layout.html" %}
 {% block body %}
-    {% include 'items/item_list.html' %}
+    <div id="itemList">
+    </div>
+    {% if "ADMIN" in session.get('userroles') %}
+        <form id="add_item" method="post">
+            {{ form.csrf_token }}
+            <input type="text" name="itemname" placeholder="Name"
+                   value="" required>
+            {% if form.errors and "itemname" in form.errors.keys() %}
+                {{ form.errors['itemnames'] }}
+            {% endif %}
+            <input type="text" name="itemdescription" placeholder="Description"
+                   value="" required>
+            {% if form.errors and "itemdescription" in form.errors.keys() %}
+                {{ form.errors['itemdescription'] }}
+            {% endif %}
+            <input type="number" name="itemstock" placeholder="Stock"
+                   value="" required>
+            {% if form.errors and "itemstock" in form.errors.keys() %}
+                {{ form.errors['itemstock'] }}
+            {% endif %}
+
+            <input id="submitItem" type="submit" value="Send">
+        </form>
+    {% endif %}
+    <script type="module">
+        import { TableComponent } from '/static/js/components/table-component.js';
+        import { sendAjax } from '/static/js/ajax-tools.js';
+
+        const submitItem = document.getElementById('submitItem');
+        submitItem.addEventListener('click', (event) =>
+        {
+            event.preventDefault();
+
+            const formData = new FormData(document.forms['add_item']);
+
+            sendAjax('/items/add', 'post', formData)
+                .then((res) =>
+                {
+                    refreshItemTable();
+                    document.forms['add_item'].reset();
+                });
+        })
+
+        refreshItemTable();
+
+        function refreshItemTable()
+        {
+            sendAjax('/api/items')
+                .then((res) =>
+                {
+                    const data = JSON.parse(res);
+
+                    const tableConfig = {
+                        data: data,
+                        columns: [
+                            { columnName: 'Id', value: 'itemid' },
+                            { columnName: 'Name', value: 'itemname' },
+                            { columnName: 'Description', value: 'itemdescription' },
+                            {#{ columnName: 'Quantity', value: 'itemquantity' },#}
+                            { columnName: 'Quantity', type: 'FORM' },
+                            { columnName: 'Actions', type: 'ACTIONS' },
+                        ],
+                        actions: [
+                            { actionName: 'Add to basket', actionCb: (data) =>
+                                {
+                                    sendAjax('/basket/add', 'post', data)
+                                        .then((res) =>
+                                        {
+
+                                        });
+                                },
+                                buttonType: 3,
+                            },
+                            { actionName: 'Details', actionCb: (data) =>
+                                {
+                                    location.replace(`/items/${data.itemid}`)
+                                },
+                                buttonType: 1
+                            },
+                            { actionName: 'Remove', actionCb: (data) =>
+                                {
+                                    sendAjax(`/items/remove/${data.itemid}`, 'post')
+                                        .then((res) =>
+                                        {
+                                            refreshItemTable();
+                                        });
+                                },
+                                buttonType: 2
+                            },
+                        ],
+                        form: {
+                            formName: 'itemForm',
+                            formIdValue: 'itemid',
+                            formFields: [
+                                { fieldName: 'itemid', value: 'itemid', type: 'hidden' },
+                                { fieldName: 'itemquantity', value: 'itemquantity', type: 'number' }
+                            ]
+                        }
+                    }
+
+                    const table = new TableComponent(tableConfig);
+                    const itemTable = document.getElementById('itemList');
+                    console.log(itemTable);
+                    while(itemTable.firstChild)
+                    {
+                        itemTable.removeChild(itemTable.firstChild);
+                    }
+                    itemTable.appendChild(table.html);
+                })
+        }
+    </script>
 {% endblock %}

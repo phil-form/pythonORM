@@ -3,13 +3,20 @@ from app import app
 from app.framework.decorators.inject import inject
 from app.forms.basket.basket_add_item_form import BasketAddItemForm
 from app.forms.item.item_form import ItemForm
+from app.framework.decorators.inject import inject
 from app.services.item_service import ItemService
 
 itemService = ItemService()
 
 @app.route('/items')
 def getItemList():
-    return render_template('items/list.html', items=itemService.find_all())
+    form = ItemForm();
+    return render_template('items/list.html', items=itemService.find_all(), form=form)
+
+@app.route('/api/items')
+@inject
+def getItemListAsJson(itemService: ItemService):
+    return jsonify([item.get_json_parsable() for item in itemService.find_all()])
 
 @app.route('/api/items')
 @inject
