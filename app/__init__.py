@@ -12,7 +12,7 @@ toolbar = DebugToolbarExtension(app)
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://app:1234@127.0.0.1:5435/app'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# csrf_protect = CSRFProtect(app)
+csrf_protect = CSRFProtect(app)
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)

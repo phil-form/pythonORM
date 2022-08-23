@@ -1,8 +1,8 @@
 from flask import render_template, request, redirect, url_for, jsonify
-from app.framework.decorators.inject import inject
 from app import app
 from app.forms.basket.basket_add_item_form import BasketAddItemForm
 from app.forms.item.item_form import ItemForm
+from app.framework.decorators.inject import inject
 from app.services.item_service import ItemService
 
 @app.route('/items')

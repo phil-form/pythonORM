@@ -1,8 +1,9 @@
-from flask import render_template, session, request, redirect, url_for
+from flask import render_template, session, request, redirect, url_for, jsonify
 
 from app import app
 from app.framework.decorators.auth_required import auth_required
 from app.forms.basket.basket_add_item_form import BasketAddItemForm
+from app.framework.decorators.inject import inject
 from app.services.basket_service import BasketService
 from app.framework.decorators.inject import inject
 
@@ -20,6 +21,14 @@ def getBasketDetail(basketService: BasketService):
     return render_template('baskets/details.html',
                            basket=basket, items=basket.items, is_basket=True)
 
+@app.route('/api/basket/items')
+@auth_required()
+@inject
+def getBasketDetailJson(basketService: BasketService):
+    basket = basketService.find_one_by(userid=session.get('userid'), basketclosed=False)
+
+    return jsonify([item.get_json_parsable() for item in basket.items])
+
 @app.route('/basket/add', methods=['POST'])
 @auth_required()
 @inject
@@ -28,7 +37,7 @@ def add_item_to_basket(basketService: BasketService):
 
     basketService.add_item(item_to_add)
 
-    return redirect(url_for('getBasketDetail'))
+    return '/basket/add response'
 
 @app.route('/basket/remove/<int:itemid>', methods=['POST'])
 @auth_required()
@@ -36,7 +45,7 @@ def add_item_to_basket(basketService: BasketService):
 def remove_item_to_basket(itemid: int, basketService: BasketService):
     basketService.remove_item(itemid)
 
-    return redirect(url_for('getBasketDetail'))
+    return '/basket/remove response'
 
 @app.route('/basket/checkout', methods=['POST'])
 @auth_required()
@@ -44,4 +53,4 @@ def remove_item_to_basket(itemid: int, basketService: BasketService):
 def checkout_basket(basketService: BasketService):
     basketService.checkout_basket()
 
-    return redirect(url_for('getBasketDetail'))
+    return '/basket/checkout response'
