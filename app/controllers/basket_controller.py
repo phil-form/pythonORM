@@ -4,6 +4,7 @@ from app import app
 from app.framework.decorators.auth_required import auth_required
 from app.forms.basket.basket_add_item_form import BasketAddItemForm
 from app.framework.decorators.inject import inject
+from app.services.auth_service import AuthService
 from app.services.basket_service import BasketService
 from app.services.item_service import ItemService
 from app.services.user_service import UserService
@@ -20,10 +21,10 @@ def getAllBaskets():
 @app.route('/basket')
 @auth_required()
 @inject
-def getBasketDetail(basketService: BasketService):
-    basket = basketService.find_one_by(userid=session.get('userid'), basketclosed=False)
-    return render_template('baskets/details.html',
-                           basket=basket, items=basket.items, is_basket=True)
+def getBasketDetail(basketService: BasketService, authService: AuthService):
+    user = authService.get_current_user()
+    basket = basketService.find_one_by(userid=user.userid, basketclosed=False)
+    return jsonify(basket.get_json_parsable())
 
 @app.route('/api/basket/items')
 @auth_required()
