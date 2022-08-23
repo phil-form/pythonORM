@@ -24,6 +24,7 @@ class ItemService(BaseService):
             db.session.commit()
         except Exception as e:
             print(e)
+            raise e
             db.session.rollback()
 
         return self.find_one(item.itemid)
@@ -39,6 +40,7 @@ class ItemService(BaseService):
             db.session.commit()
         except Exception as e:
             print(e)
+            raise e
             db.session.rollback()
 
         return self.find_one(entity_id)
@@ -54,6 +56,7 @@ class ItemService(BaseService):
             db.session.commit()
         except Exception as e:
             print(e)
+            raise e
             db.session.rollback()
 
         return item.itemid

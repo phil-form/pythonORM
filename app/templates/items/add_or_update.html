@@ -15,11 +15,15 @@
         {% endif %}
         <input type="number" name="itemstock" placeholder="Stock"
                value="{{ form.itemstock.data }}" required>
-        {% if form.errors and "itemstock" in form.errors.keys() %}
-            {{ form.errors['itemstock'] }}
-        {% endif %}
 
         <input type="submit" value="Send">
     </form>
+    <div>
+        <p>
+        {% if error %}
+            error code {{ error.code }} : {{ error.message }}
+        {% endif %}
+        </p>
+    </div>
 </div>
 {% endblock %}

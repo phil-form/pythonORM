@@ -6,10 +6,9 @@ from app.forms.item.item_form import ItemForm
 from app.framework.decorators.inject import inject
 from app.services.item_service import ItemService
 
-itemService = ItemService()
-
 @app.route('/items')
-def getItemList():
+@inject
+def getItemList(itemService: ItemService):
     form = ItemForm();
     return render_template('items/list.html', items=itemService.find_all(), form=form)
 
@@ -24,30 +23,44 @@ def getItemsAsJson(item_service: ItemService):
     return jsonify([item.get_json_parsable() for item in item_service.find_all()])
 
 @app.route('/items/<int:itemid>')
-def getItemDetails(itemid):
+@inject
+def getItemDetails(itemService: ItemService, itemid):
     form = BasketAddItemForm()
 
     return render_template('items/details.html', item=itemService.find_one(itemid), form=form)
 
 @app.route('/items/add', methods=['GET','POST'])
-def addItem():
+@inject
+def addItem(itemService: ItemService):
     form = ItemForm(request.form)
+    error = {
+        "code": 0,
+        "message": ""
+    }
 
     if request.method == 'POST':
         if form.validate():
-            item = itemService.insert(form)
+            try:
+                item = itemService.insert(form)
+                return redirect(url_for('getItemList'))
+            except Exception as e:
+                error["code"] = 600
+                error["message"] = e.args
 
-            return redirect(url_for('getItemList'))
+    if form.errors:
+        error["code"] = 700
+        error["message"] = form.errors
+        
 
-    print(form.errors)
     form.itemname.data = ''
     form.itemdescription.data = ''
     form.itemstock.data = 1
 
-    return render_template('items/add_or_update.html', form=form)
+    return render_template('items/add_or_update.html', form=form, error=error)
 
 @app.route('/items/update/<int:itemid>', methods=['GET','POST'])
-def updateItem(itemid: int):
+@inject
+def updateItem(itemService: ItemService, itemid: int):
     item = itemService.find_one(itemid)
 
     if item is None:
