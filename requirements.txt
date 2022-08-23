@@ -1,5 +1,6 @@
 Flask
 Flask-WTF
+WTForms-JSON
 Jinja2
 Flask-DebugToolbar
 psycopg2
@@ -8,3 +9,5 @@ Flask-SQLAlchemy
 Flask-Migrate
 dependency-injector
 pyyaml
+pyjwt
+uuid

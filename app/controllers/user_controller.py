@@ -1,3 +1,7 @@
+import datetime
+
+import jwt
+
 from app.framework.decorators.auth_required import auth_required
 from app.framework.decorators.inject import inject
 from app.services.auth_service import AuthService
@@ -13,94 +17,70 @@ from app.forms.user.user_update_form import UserUpdateForm
 # http://localhost:8080/users -> GET
 @app.route('/users')
 @inject
-def getUserList(userService: UserService):
-    form = UserRegisterForm()
-
-    return render_template('users/list.html', users=userService.find_all(), form=form)
-
-@app.route('/api/users')
-@inject
-def getUsersAsJson(user_service: UserService):
+def getUserList(user_service: UserService):
     return jsonify([user.get_json_parsable() for user in user_service.find_all()])
 
 # http://localhost:8080/users/5 -> GET
 @app.route('/users/<int:userid>', methods=["GET"])
 @auth_required()
 @inject
-def getOneUser(userid: int, userService: UserService):
-    user = userService.find_one(userid)
+def getOneUser(userid: int, user_service: UserService):
+    user = user_service.find_one(userid)
 
-    return render_template('users/profile.html', user=user)
+    return jsonify(user.get_json_parsable())
 
 # http://localhost:8080/users/register -> GET | POST
-@app.route('/users/register', methods=["GET", "POST"])
+@app.route('/users/register', methods=["POST"])
 @inject
 def register(userService: UserService):
     form = UserRegisterForm(request.form)
 
-    if request.method == 'POST':
-        if form.validate():
-            user = userService.insert(form)
+    if form.validate():
+        user = userService.insert(form)
 
-            return redirect(url_for('getOneUser', userid=user.userid))
+        return jsonify(user.get_json_parsable())
 
-    return render_template('users/register.html', form=form)
+    return jsonify(form.errors)
 
 
-@app.route('/users/update/<int:userid>', methods=["GET", "POST"])
+@app.route('/users/<int:userid>', methods=["PUT"])
 @auth_required(level="ADMIN", or_is_current_user=True)
 @inject
 def userUpdate(userid: int, userService: UserService, roleService: RoleService):
     form = UserUpdateForm(request.form)
-    roles = roleService.find_all()
 
-    if request.method == 'POST':
-        if form.validate():
-            user = userService.update(userid, form)
+    if form.validate():
+        user = userService.update(userid, form)
 
-            return redirect(url_for('getOneUser', userid=userid))
+        return jsonify(user.get_json_parsable())
 
-    user = userService.find_one(userid)
-    return render_template('users/update.html', form=form, user=user, roles=roles)
+    return jsonify(form.errors)
 
 
-@app.route('/login', methods=["GET", "POST"])
+@app.route('/login', methods=["POST"])
 @inject
 def login(userService: UserService):
-    form = UserLoginForm(request.form)
+    form = UserLoginForm.from_json(request.json)
 
-    if request.method == 'POST':
-        if form.validate():
-            user = userService.login(form)
+    if form.validate():
+        user = userService.login(form)
 
-            if user != None:
-                session['username'] = user.username
-                session['userid'] = user.userid
-                session['userroles'] = user.get_roles()
-                return redirect(url_for('getOneUser', userid=user.userid))
+        if user != None:
+            token = jwt.encode({
+                                'userid' : user.userid,
+                                'username' : user.username,
+                                'roles' : user.get_roles(),
+                                'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=45)
+                                },
+                               app.config['SECRET_KEY'],
+                               "HS256")
 
-            errors = {}
-            errors['authentication'] = 'Wrong user or password!'
+            return jsonify({ 'token': token })
 
-            return render_template('users/login.html', form=form, errors=errors)
+        errors = {}
+        errors['authentication'] = 'Wrong user or password!'
 
-    return render_template('users/login.html', form=form, errors=form.errors)
+        return jsonify(errors)
 
-
-@app.route('/logout', methods=["GET"])
-@inject
-def logout():
-    session.pop('userid', None)
-    session.pop('username', None)
-    session.pop('userroles', None)
-    return redirect(url_for('index'))
-
-
-@app.route('/profile', methods=["GET"])
-@auth_required()
-@inject
-def profile(authService: AuthService):
-    userid = authService.get_current_user().userid
-
-    return redirect(url_for('getOneUser', userid=userid))
+    return jsonify(form.errors)
 
