@@ -19,4 +19,5 @@ class AuthServiceImpl(AuthService):
     def get_current_user(self) -> UserDTO:
         return self.__current_user
 
-
+    def set_current_user(self, user):
+        self.__current_user = self.__user_service.find_one(user['userid'])
