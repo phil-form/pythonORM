@@ -13,3 +13,6 @@ class AuthService(ABC):
     @abstractmethod
     def get_current_user(self) -> UserDTO:
         pass
+
+    def set_current_user(self, user):
+        pass

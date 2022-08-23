@@ -18,7 +18,9 @@ class BasketService(BaseService):
         return BasketDTO.build_from_entity(Basket.query.filter_by(basketid=entity_id).one())
 
     def find_one_by(self, **kwargs):
-        return BasketDTO.build_from_entity(Basket.query.filter_by(**kwargs).one())
+        basket = Basket.query.filter_by(**kwargs).one()
+        print(basket)
+        return BasketDTO.build_from_entity(basket)
 
     def insert(self, data):
         basket = Basket()

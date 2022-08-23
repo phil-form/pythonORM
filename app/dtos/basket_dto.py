@@ -25,4 +25,8 @@ class BasketDTO(AbstractDTO):
         return basket_dto
 
     def get_json_parsable(self):
-        pass
+        items = [item.__dict__ for item in self.items]
+        self.items = items
+        self.user = self.user.get_json_parsable()
+
+        return self.__dict__
