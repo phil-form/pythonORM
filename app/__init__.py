@@ -1,3 +1,4 @@
+import wtforms_json
 from flask import Flask
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_sqlalchemy import SQLAlchemy
@@ -7,6 +8,7 @@ from flask_wtf import CSRFProtect
 app = Flask('app')
 app.debug = True
 app.secret_key = 'superSecretKey01@'
+wtforms_json.init()
 
 toolbar = DebugToolbarExtension(app)
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False

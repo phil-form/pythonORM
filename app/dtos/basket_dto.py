@@ -2,6 +2,7 @@ from app.dtos.abstract_dto import AbstractDTO
 from app.dtos.item_dto import ItemDTO
 from app.dtos.user_dto import UserDTO
 from app.models.basket import Basket
+from copy import deepcopy
 
 
 class BasketDTO(AbstractDTO):
@@ -25,4 +26,8 @@ class BasketDTO(AbstractDTO):
         return basket_dto
 
     def get_json_parsable(self):
-        pass
+        items = [item.__dict__ for item in self.items]
+        self.items = items
+        self.user = self.user.get_json_parsable()
+
+        return self.__dict__

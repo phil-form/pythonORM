@@ -1,33 +1,24 @@
 {% block body %}
-    <table class="table table-striped table-hover">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Description</th>
-                <th scope="col">Quantity</th>
-                <th scope="col">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in items %}
-                <tr>
-                    <th scope="row">{{ item.itemid }}</th>
-                    <td> {{ item.itemname }}</td>
-                    <td> {{ item.itemdescription }}</td>
-                    <td> {{ item.itemquantity }}</td>
-                    <td>
-                        {% if is_basket %}
-                            <div>
-                                <form id="formItemID{{ item.itemid }}" method="post" action="{{ url_for('add_item_to_basket') }}">
-                                    <input name="itemid" type="number" value="{{ item.itemid }}" hidden>
-                                    <input name="itemquantity" type="number" value="{{ item.itemquantity }}" required>
-                                    <input id="addItem{{ item.itemid }}" class="btn btn-primary" type="submit" value="Update">
-                                    <input id="removeItem{{ item.itemid }}" class="btn btn-danger" type="submit" value="Remove">
-                                </form>
-                            </div>
-                            <script type="module">
-                                import { sendAjax } from '/static/js/ajax-tools.js';
+    <div id="itemTable"></div>
+            <div></div>
+                <script type="module">
+                    import { TableComponent } from '/static/js/components/table-component.js';
+                    import { sendAjax } from '/static/js/ajax-tools.js';
+            
+                    const submitItem = document.getElementById('submitItem');
+                    submitItem.addEventListener('click', (event) =>
+                    {
+                        event.preventDefault();
+            
+                        const formData = new FormData(document.forms['formItem']);
+            
+                        sendAjax('/items/add', 'post', formData)
+                            .then((res) =>
+                            {
+                                refreshItemTable();
+                                document.forms['formItem'].reset();
+                            })
+                    })
 
                                 document.getElementById('addItem{{ item.itemid }}')
                                     .addEventListener('click', (e) =>
@@ -50,7 +41,7 @@
                                         e.preventDefault();
 
                                         {#const data = new FormData(document.forms['formItemID{{ item.itemid }}']);#}
-                                        sendAjax("{{ url_for('add_item_to_basket') }}", 'post')
+                                        sendAjax("{{ url_for('remove_item_to_basket', itemid=item.itemid) }}", 'post')
                                             .then((res) =>
                                             {
                                                 console.log(res)
@@ -79,19 +70,6 @@
                                         e.preventDefault();
 
                                         const data = new FormData(document.forms['formItemID{{ item.itemid }}']);
-                                        sendAjax("{{ url_for('add_item_to_basket') }}", 'post', data)
-                                            .then((res) =>
-                                            {
-                                                console.log(res)
-                                            });
-                                    });
-
-                                    document.getElementById('isBasketItemID{{ item.itemid }}')
-                                    .addEventListener('click', (e) =>
-                                    {
-                                        e.preventDefault();
-
-                                        const data = new FormData(document.forms['isBasketItemID{{ item.itemid }}']);
                                         sendAjax("{{ url_for('add_item_to_basket') }}", 'post', data)
                                             .then((res) =>
                                             {

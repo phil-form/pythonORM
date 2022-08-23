@@ -27,8 +27,9 @@ class UserDTO(AbstractDTO):
         user_dto.useremail = user.useremail
         user_dto.userdescription = user.userdescription
         user_dto.userroles = []
+
         for role in user.roles:
-            user_dto.userroles.append(RoleDTO.build_from_entity(role.rel_role).__dict__)
+            user_dto.userroles.append(RoleDTO.build_from_entity(role.rel_role))
 
         return user_dto
 
