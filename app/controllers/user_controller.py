@@ -28,7 +28,7 @@ def getUserList(user_service: UserService):
 def getOneUser(userid: int, user_service: UserService):
     user = user_service.find_one(userid)
 
-    return jsonify('users/profile.html', user=user.get_json_parsable())
+    return jsonify(user.get_json_parsable())
 
 # http://localhost:8080/users/register -> GET | POST
 @app.route('/users/register', methods=["POST"])
@@ -41,10 +41,10 @@ def register(userService: UserService):
 
         return jsonify(user.get_json_parsable())
 
-    return jsonify({ 'errors': 'wrong credentials!'})
+    return jsonify(form.errors)
 
 
-@app.route('/users/update/<int:userid>', methods=["PUT"])
+@app.route('/users/<int:userid>', methods=["PUT"])
 @auth_required(level="ADMIN", or_is_current_user=True)
 @inject
 def userUpdate(userid: int, userService: UserService, roleService: RoleService):
