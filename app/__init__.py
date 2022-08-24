@@ -1,5 +1,6 @@
 import wtforms_json
 from flask import Flask
+from flask_cors import CORS
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -16,6 +17,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://app:1234@127.0.0.1:5435/ap
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # csrf_protect = CSRFProtect(app)
 
+cors = CORS(app, resources={'/api/*': {'origins': '*'}})
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 

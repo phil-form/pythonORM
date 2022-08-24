@@ -11,14 +11,14 @@
                 crossorigin="anonymous"></script>
 
         <script type="module">
-            import { ajaxConfig } from '/static/js/ajax-tools.js';
-
-            ajaxConfig.headers.push(
-                { key: "X-CSRFToken", value: "{{ csrf_token() }}", methods: ['post', 'put', 'delete'] }
-            );
-            ajaxConfig.headers.push(
-                { key: "Authorizations", value: "{{ csrf_token() }}", methods: ['ALL']}
-            )
+            {#import { ajaxConfig } from '/static/js/ajax-tools.js';#}
+            {##}
+            {#ajaxConfig.headers.push(#}
+            {#    { key: "X-CSRFToken", value: "{{ csrf_token() }}", methods: ['post', 'put', 'delete'] }#}
+            {#);#}
+            {#ajaxConfig.headers.push(#}
+            {#    { key: "Authorizations", value: "{{ csrf_token() }}", methods: ['ALL']}#}
+            {#)#}
         </script>
     </head>
 

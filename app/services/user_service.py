@@ -1,6 +1,7 @@
 from flask import session
 
 from app import db
+from app.dtos.user_dto import UserDTO
 from app.forms.user.user_login_form import UserLoginForm
 from app.forms.user.user_register_form import UserRegisterForm
 from app.forms.user.user_update_form import UserUpdateForm
@@ -85,6 +86,6 @@ class UserService(BaseService):
         to_login = self.find_one_by(username=user.username)
 
         if to_login is not None and bcrypt.checkpw(user.userpassword.encode('utf-8'), to_login.userpassword.encode('utf-8')):
-            return to_login
+            return UserDTO.build_from_entity(to_login)
 
         return None
