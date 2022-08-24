@@ -2,6 +2,7 @@ import datetime
 
 import jwt
 
+from app.dtos.user_dto import UserDTO
 from app.framework.decorators.auth_required import auth_required
 from app.framework.decorators.inject import inject
 from app.services.auth_service import AuthService
@@ -15,13 +16,14 @@ from app.forms.user.user_update_form import UserUpdateForm
 
 
 # http://localhost:8080/users -> GET
-@app.route('/users')
+@app.route('/api/users')
+@auth_required()
 @inject
 def getUserList(user_service: UserService):
     return jsonify([user.get_json_parsable() for user in user_service.find_all()])
 
 # http://localhost:8080/users/5 -> GET
-@app.route('/users/<int:userid>', methods=["GET"])
+@app.route('/api/users/<int:userid>', methods=["GET"])
 @auth_required()
 @inject
 def getOneUser(userid: int, user_service: UserService):
@@ -30,10 +32,10 @@ def getOneUser(userid: int, user_service: UserService):
     return jsonify(user.get_json_parsable())
 
 # http://localhost:8080/users/register -> GET | POST
-@app.route('/users/register', methods=["POST"])
+@app.route('/api/users/register', methods=["POST"])
 @inject
 def register(userService: UserService):
-    form = UserRegisterForm(request.form)
+    form = UserRegisterForm.from_json(request.json)
 
     if form.validate():
         user = userService.insert(form)
@@ -43,11 +45,11 @@ def register(userService: UserService):
     return jsonify(form.errors)
 
 
-@app.route('/users/<int:userid>', methods=["PUT"])
+@app.route('/api/users/<int:userid>', methods=["PUT"])
 @auth_required(level="ADMIN", or_is_current_user=True)
 @inject
 def userUpdate(userid: int, userService: UserService, roleService: RoleService):
-    form = UserUpdateForm(request.form)
+    form = UserUpdateForm.from_json(request.json)
 
     if form.validate():
         user = userService.update(userid, form)
@@ -57,7 +59,7 @@ def userUpdate(userid: int, userService: UserService, roleService: RoleService):
     return jsonify(form.errors)
 
 
-@app.route('/login', methods=["POST"])
+@app.route('/api/login', methods=["POST"])
 @inject
 def login(userService: UserService):
     form = UserLoginForm.from_json(request.json)
@@ -67,6 +69,7 @@ def login(userService: UserService):
 
         if user != None:
             token = jwt.encode({
+                                'user': user.get_json_parsable(),
                                 'userid' : user.userid,
                                 'username' : user.username,
                                 'roles' : user.get_roles(),
