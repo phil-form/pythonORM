@@ -4,7 +4,6 @@ from app.framework.decorators.auth_required import auth_required
 from app.framework.decorators.inject import inject
 from app.services.auth_service import AuthService
 from app.services.basket_service import BasketService
-from flask import jsonify, redirect, render_template, request, session, url_for
 
 
 @app.route("/api/basket/all")

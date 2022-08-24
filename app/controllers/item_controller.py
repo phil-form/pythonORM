@@ -8,8 +8,8 @@ from flask import jsonify, redirect, render_template, request, url_for
 
 @app.route("/api/items")
 @inject
-def getItemsAsJson(item_service: ItemService):
-    return jsonify([item.get_json_parsable() for item in item_service.find_all()])
+def getItemListAsJson(itemService: ItemService):
+    return jsonify([item.get_json_parsable() for item in itemService.find_all()])
 
 
 @app.route("/api/items/<int:itemid>")

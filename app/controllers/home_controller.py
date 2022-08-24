@@ -1,8 +1,7 @@
 from app import app
-from flask import render_template, redirect, jsonify
+from flask import jsonify, redirect, render_template
 
 
-@app.route('/', methods=['GET'])
+@app.route("/", methods=["GET"])
 def index():
-    # return render_template('home/home.html')
-    return jsonify({'error': 'WRONG URL'}), 500
+    return jsonify({"error": "invalid credentials"}), 500
