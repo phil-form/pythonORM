@@ -1,12 +1,12 @@
 export FLASK_APP=app
 
-while getopts 'm:iue:' flag
+while getopts 'm:iue' flag
 do
   case "${flag}" in
     m) DB_CMD="flask db migrate -m ${OPTARG}";;
     i) DB_CMD="flask db init";;
     u) DB_CMD="flask db upgrade";;
-    e) DB_CMD="flask db revision --autogenerate ${OPTARG}";;
+    e) DB_CMD="flask db revision --autogenerate";;
   esac
 done
 
