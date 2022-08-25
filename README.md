@@ -31,12 +31,14 @@
         exampleData2 = StringField('exampleData2', validators=[DataRequired()])
         
 ## 3) mappers
-    Créer les mapper pour passer des entités au dtos, et mettre à jours les entité à partir des forms.
+    Créer les mapper pour passer des entités au dtos, et mettre à jours les entité 
+    à partir des forms.
     
 ## 4) services
     - des fonctions pour contacter la db : 
         - findOne => retourne une entité en fonction de son id
-        - findOneBy => retourne une entité en fonction d'un paramètre passé (données d'une des colonnes)
+        - findOneBy => retourne une entité en fonction d'un 
+            paramètre passé (données d'une des colonnes)
         - findAll => retourne toutes les data
         - update => met à jours les donnés en DB
         - insert => insert des nouvelles donnée en DB
@@ -67,7 +69,16 @@
     pour créer de nouvelles migrations :
         $ ./sqlAlchemy.sh -m nom_de_la_migration
         
-    Le fichier de la migration peut être modifier si nécéssaire pour mettre à jours ou rajouter des données dans la DB.
+    Le fichier de la migration peut être modifier si nécéssaire pour mettre à jours ou rajouter 
+    des données dans la DB.
     
     une fois les migrations créées on peut les appliquer avec la commande :
         $ ./sqlAlchemy.sh -u
+        
+## 8) lancer le serveur 
+    $ python3 runserver.py
+    
+    pour lancer le serveur en debug depuis votre ide, il faudra soit créer un launch.json
+    via l'onglet de debugging de VSCode.
+    Soit on peut créer une nouvelle configuration de debugging dans Pycharm et mettre le runserver.py
+    comme programme de lancement.
