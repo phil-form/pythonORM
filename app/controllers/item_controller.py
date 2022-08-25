@@ -27,10 +27,6 @@ def addItem(itemService: ItemService):
 
         return jsonify(item.get_json_parsable())
 
-    form.itemname.data = ''
-    form.itemdescription.data = ''
-    form.itemstock.data = 1
-
     return jsonify(form.errors)
 
 @app.route('/api/items/<int:itemid>', methods=['PUT'])

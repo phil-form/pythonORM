@@ -12,3 +12,4 @@ dependency-injector
 pyyaml
 pyjwt
 uuid
+python-dotenv
