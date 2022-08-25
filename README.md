@@ -1,11 +1,6 @@
 # pythonORM
 
 ## 1) models
-    ex 
-    class Example:
-        def __init__(self, data):
-            self.data = data
-## 2) formulares
     from app import db
     from app.models.base_entity import BaseEntity
 
@@ -13,8 +8,9 @@
         __tablename__ = "roles"
         roleid = db.Column(db.Integer, primary_key=True)
         rolename = db.Column(db.String(50), nullable=False, unique=True, index=True)
-        
-### 2.2) relationship one to many
+            self.data = data
+            
+### 1.2) relationship one to many
     class Parent(BaseEntity, db.Model):
         __tablename__ = "parents"
         parentid = db.Column(db.Integer, primary_key=True)
@@ -25,6 +21,15 @@
         __tablename__ = "children"
         childid = db.Column(db.Integer, primary_key=True)
         parent = db.relationship("User", back_populates="children")
+        
+## 2) formulares
+    class ExampleForm(FlaskForm):
+        # désactiver CSRF pour les api
+        class Meta:
+            csrf = False
+        exampleData = StringField('exampleData', validators=[])
+        exampleData2 = StringField('exampleData2', validators=[DataRequired()])
+        
 ## 3) mappers
     Créer les mapper pour passer des entités au dtos, et mettre à jours les entité à partir des forms.
     
