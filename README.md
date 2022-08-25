@@ -58,3 +58,16 @@
     les mappers dépendent des modèles, des DTOs et des forms
     les services dépendent des modèles et des mappers
     les controllers dépendent des services.
+    
+## 7) database 
+    la connection string doit être modifiée dans le .env ou .env.local
+    pour initialiser la db utiliser :
+        $ ./sqlAlchemy.sh -i
+        
+    pour créer de nouvelles migrations :
+        $ ./sqlAlchemy.sh -m nom_de_la_migration
+        
+    Le fichier de la migration peut être modifier si nécéssaire pour mettre à jours ou rajouter des données dans la DB.
+    
+    une fois les migrations créées on peut les appliquer avec la commande :
+        $ ./sqlAlchemy.sh -u
