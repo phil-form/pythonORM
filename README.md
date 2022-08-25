@@ -52,3 +52,9 @@
         @app.route('/path/<int:dataid>', methods=['GET', 'POST'])
         def getAllData(dataid):
             return jsonify(service.findOne().get_json_parseable())
+
+
+## 6) Dépendence 
+    les mappers dépendent des modèles, des DTOs et des forms
+    les services dépendent des modèles et des mappers
+    les controllers dépendent des services.
