@@ -1,82 +1,52 @@
 from flask import render_template, request, redirect, url_for, jsonify
 from app import app
-from app.framework.decorators.inject import inject
-from app.forms.basket.basket_add_item_form import BasketAddItemForm
 from app.forms.item.item_form import ItemForm
+from app.framework.decorators.auth_required import auth_required
 from app.framework.decorators.inject import inject
 from app.services.item_service import ItemService
-
-@app.route('/items')
-@inject
-def getItemList(itemService: ItemService):
-    form = ItemForm();
-    return render_template('items/list.html', items=itemService.find_all(), form=form)
 
 @app.route('/api/items')
 @inject
 def getItemListAsJson(itemService: ItemService):
     return jsonify([item.get_json_parsable() for item in itemService.find_all()])
 
-@app.route('/api/items')
+@app.route('/api/items/<int:itemid>')
 @inject
-def getItemsAsJson(item_service: ItemService):
-    return jsonify([item.get_json_parsable() for item in item_service.find_all()])
+def getItemDetails(itemid, itemService: ItemService):
+    return jsonify(itemService.find_one(itemid).get_json_parsable())
 
-@app.route('/items/<int:itemid>')
+@app.route('/api/items/add', methods=['POST'])
 @inject
-def getItemDetails(itemService: ItemService, itemid):
-    form = BasketAddItemForm()
-
-    return render_template('items/details.html', item=itemService.find_one(itemid), form=form)
-
-@app.route('/items/add', methods=['GET','POST'])
+@auth_required(level="ADMIN")
 @inject
-def addItem(itemService: ItemService):
-    form = ItemForm(request.form)
+def addItem(itemService: ItemServiceitemService: ItemService):
+    form = ItemForm.from_json(request.json)
     error = {
         "code": 0,
         "message": ""
     }
 
-    if request.method == 'POST':
-        if form.validate():
-            try:
-                item = itemService.insert(form)
-                return redirect(url_for('getItemList'))
-            except Exception as e:
-                error["code"] = 600
-                error["message"] = e.args
+    if form.validate():
+        item = itemService.insert(form)
 
-    if form.errors:
-        error["code"] = 700
-        error["message"] = form.errors
-        
+        return jsonify(item.get_json_parsable())
 
-    form.itemname.data = ''
-    form.itemdescription.data = ''
-    form.itemstock.data = 1
+    return jsonify(form.errors)
 
-    return render_template('items/add_or_update.html', form=form, error=error)
-
-@app.route('/items/update/<int:itemid>', methods=['GET','POST'])
+@app.route('/api/items/<int:itemid>', methods=['PUT'])
+@auth_required(level="ADMIN")
 @inject
-def updateItem(itemService: ItemService, itemid: int):
+def updateItem(itemid: int, itemService: ItemService):
     item = itemService.find_one(itemid)
 
     if item is None:
-        return redirect(url_for('getItemList'))
+        return jsonify({ 'errors': "item not found" })
 
     form = ItemForm(request.form)
 
-    if request.method == 'POST':
-        if form.validate():
-            item = itemService.update(itemid, form)
+    if form.validate():
+        item = itemService.update(itemid, form)
 
-            return redirect(url_for('getItemList'))
+        return jsonify(item.get_json_parsable())
 
-    print(form.errors)
-    form.itemname.data = item.itemname
-    form.itemdescription.data = item.itemdescription
-    form.itemstock.data = item.itemquantity
-
-    return render_template('items/add_or_update.html', form=form)
+    return jsonify(form.errors)

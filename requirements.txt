@@ -7,7 +7,9 @@ psycopg2
 bcrypt
 Flask-SQLAlchemy
 Flask-Migrate
+flask-cors
 dependency-injector
 pyyaml
 pyjwt
 uuid
+python-dotenv

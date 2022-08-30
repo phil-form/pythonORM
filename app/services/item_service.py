@@ -1,3 +1,5 @@
+import datetime
+
 from app import db
 from app.dtos.item_dto import ItemDTO
 from app.mappers.item_mapper import ItemMapper
@@ -39,8 +41,6 @@ class ItemService(BaseService):
         try:
             db.session.commit()
         except Exception as e:
-            print(e)
-            raise e
             db.session.rollback()
 
         return self.find_one(entity_id)

@@ -22,7 +22,7 @@ def auth_required(level="USER", or_is_current_user=False):
                 token = request.headers['Authorization']
 
             if not token:
-                return jsonify({ "error": "invalid credentials!"})
+                return redirect(url_for('index'))
 
             try:
                 token = token.replace('Bearer ', '')
